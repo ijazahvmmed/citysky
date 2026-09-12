@@ -1,0 +1,50 @@
+.intro {
+  padding-block: clamp(7rem, 12vw, 13rem);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: clamp(1rem, 2.5vw, 2.5rem);
+  row-gap: 2rem;
+}
+
+.label {
+  grid-column: 1 / span 3;
+  padding-top: 0.6rem;
+}
+
+.text {
+  grid-column: 4 / span 9;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2.5rem, 5vw, 4.5rem);
+}
+
+.lede {
+  max-width: 26ch;
+  text-wrap: pretty;
+}
+
+.meta {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: 2rem;
+  align-items: end;
+  margin-left: clamp(0rem, 12vw, 12rem);
+}
+
+@media (max-width: 899px) {
+  .label {
+    grid-column: 1 / -1;
+  }
+
+  .text {
+    grid-column: 1 / -1;
+  }
+
+  .meta {
+    grid-template-columns: 1fr;
+    margin-left: 0;
+  }
+}

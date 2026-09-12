@@ -1,0 +1,165 @@
+.section {
+  position: relative;
+  overflow: hidden;
+  padding-top: clamp(4rem, 6vw, 6rem);
+  padding-bottom: clamp(4rem, 6vw, 6rem);
+  border-top: 1px solid var(--border);
+}
+
+.head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: clamp(2.5rem, 4vw, 4rem);
+}
+
+.title {
+  margin-top: 1rem;
+  max-width: 14ch;
+}
+
+.track {
+  display: flex;
+  gap: clamp(1.5rem, 3vw, 3rem);
+  padding-inline: var(--gutter);
+  will-change: transform;
+}
+
+.card {
+  flex: none;
+  width: 65vw;
+  max-width: 1040px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.media {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: #e7e6e2;
+}
+
+.media img {
+  transition: transform 1.2s var(--ease-out);
+  will-change: transform;
+}
+
+.card:hover .media img,
+.card:focus-visible .media img {
+  transform: scale(1.04);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.index {
+  font-size: var(--fs-label);
+  letter-spacing: 0.15em;
+  color: var(--text-secondary);
+}
+
+.name {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.75rem, 3vw, 2.75rem);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+}
+
+.meta {
+  font-size: var(--fs-small);
+  color: var(--text-secondary);
+  display: inline-flex;
+  gap: 0.6rem;
+  white-space: nowrap;
+}
+
+.sep {
+  opacity: 0.6;
+}
+
+.end {
+  flex: none;
+  width: 40vw;
+  min-width: 320px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2.5rem;
+  padding-left: clamp(1rem, 4vw, 4rem);
+  padding-right: var(--gutter);
+}
+
+.endText {
+  max-width: 18ch;
+}
+
+@media (min-width: 1024px) {
+  .section {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .track {
+    align-items: stretch;
+  }
+
+  .card {
+    height: calc(100vh - 20rem);
+    max-height: 720px;
+  }
+
+  .media {
+    aspect-ratio: auto;
+    flex: 1;
+    min-height: 0;
+  }
+}
+
+@media (max-width: 1023px) {
+  .track {
+    flex-direction: column;
+    gap: 4rem;
+    will-change: auto;
+  }
+
+  .card {
+    width: 100%;
+    max-width: none;
+  }
+
+  .card:nth-child(even) {
+    width: 82%;
+    margin-left: auto;
+  }
+
+  .end {
+    width: 100%;
+    padding: 0;
+  }
+
+  .body .row:last-child {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .meta {
+    white-space: normal;
+  }
+}

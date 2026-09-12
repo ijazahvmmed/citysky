@@ -1,0 +1,65 @@
+.footer {
+  padding-top: clamp(4rem, 8vw, 8rem);
+  padding-bottom: 2.5rem;
+  overflow: hidden;
+}
+
+.wordmark {
+  font-family: var(--font-display);
+  font-size: clamp(5rem, 22vw, 22rem);
+  line-height: 0.8;
+  letter-spacing: -0.03em;
+  margin-left: -0.04em;
+  color: var(--text-inverse);
+  opacity: 0.92;
+  user-select: none;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 2rem;
+  margin-top: clamp(3rem, 6vw, 6rem);
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: var(--fs-small);
+}
+
+.address {
+  font-style: normal;
+  font-size: var(--fs-small);
+  line-height: 1.7;
+}
+
+.hours {
+  margin-top: -0.5rem;
+}
+
+.bottom {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: clamp(3rem, 6vw, 5rem);
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
+@media (max-width: 899px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2.5rem 1.5rem;
+  }
+}

@@ -1,0 +1,181 @@
+.tiers {
+  border-top: 1px solid var(--border);
+}
+
+.head {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: clamp(1rem, 2.5vw, 2.5rem);
+  row-gap: 1.5rem;
+  margin-bottom: clamp(3.5rem, 6vw, 6rem);
+}
+
+.head > :first-child {
+  grid-column: 1 / -1;
+}
+
+.title {
+  grid-column: 1 / span 8;
+  max-width: 16ch;
+}
+
+.lead {
+  grid-column: 9 / span 4;
+  align-self: end;
+  max-width: 36ch;
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid var(--border);
+}
+
+.col {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: clamp(2rem, 3vw, 3rem) clamp(1.5rem, 2.5vw, 2.5rem) clamp(2.5rem, 4vw, 4rem) 0;
+}
+
+.col + .col {
+  padding-left: clamp(1.5rem, 2.5vw, 2.5rem);
+  border-left: 1px solid var(--border);
+}
+
+.featured {
+  border-left: 2px solid var(--accent) !important;
+  background: linear-gradient(to right, var(--accent-tint), transparent 70%);
+  padding-right: 0;
+}
+
+.most {
+  position: absolute;
+  top: clamp(2rem, 3vw, 3rem);
+  right: 0;
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.numeral {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 4vw, 3.75rem);
+  line-height: 1;
+  color: var(--text-secondary);
+  /* 0.8 keeps the numeral quiet while clearing 3:1 for large text. */
+  opacity: 0.8;
+}
+
+.name {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.75rem, 2.6vw, 2.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  margin-top: 0.5rem;
+}
+
+.featured .name {
+  font-size: clamp(2rem, 3.1vw, 3rem);
+}
+
+.tagline {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.25rem;
+  line-height: 1.3;
+  color: var(--text-primary);
+}
+
+.copy {
+  max-width: 34ch;
+}
+
+.price {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.priceValue {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 2.4vw, 2.25rem);
+  line-height: 1;
+}
+
+.includes {
+  display: flex;
+  flex-direction: column;
+  margin-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.includes li {
+  font-size: var(--fs-small);
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  gap: 0.75rem;
+  align-items: baseline;
+}
+
+.includes li::before {
+  content: "";
+  flex: none;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.35;
+  transform: translateY(-2px);
+}
+
+.featured .includes li::before {
+  background: var(--accent);
+  opacity: 1;
+}
+
+.enquire {
+  margin-top: 1rem;
+  align-self: flex-start;
+}
+
+.foot {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: clamp(2.5rem, 4vw, 4rem);
+}
+
+@media (max-width: 899px) {
+  .title {
+    grid-column: 1 / -1;
+  }
+
+  .lead {
+    grid-column: 1 / -1;
+  }
+
+  .columns {
+    grid-template-columns: 1fr;
+  }
+
+  .col + .col {
+    padding-left: 0;
+    border-left: 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .featured {
+    padding-left: 1.5rem !important;
+    border-top: 0 !important;
+  }
+
+  .foot {
+    justify-content: flex-start;
+  }
+}

@@ -1,0 +1,260 @@
+.hero {
+  padding-top: calc(var(--nav-h) + clamp(3rem, 7vw, 7rem));
+  padding-bottom: clamp(4rem, 8vw, 8rem);
+}
+
+.heroGrid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: clamp(1rem, 2.5vw, 2.5rem);
+  row-gap: 3rem;
+  align-items: end;
+}
+
+.heroText {
+  grid-column: 1 / span 7;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding-bottom: clamp(2rem, 5vw, 5rem);
+}
+
+.title {
+  max-width: 10ch;
+  text-wrap: balance;
+}
+
+.heroLead {
+  max-width: 40ch;
+}
+
+.heroImage {
+  grid-column: 8 / span 5;
+  aspect-ratio: 4 / 5;
+}
+
+.story {
+  border-top: 1px solid var(--border);
+}
+
+.storyGrid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: clamp(1rem, 2.5vw, 2.5rem);
+  row-gap: 2rem;
+}
+
+.storyLabel {
+  grid-column: 1 / span 3;
+  padding-top: 0.6rem;
+}
+
+.storyText {
+  grid-column: 5 / span 8;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.storyLede {
+  max-width: 24ch;
+  margin-bottom: 1rem;
+}
+
+.quote {
+  padding-block: clamp(4rem, 8vw, 8rem);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  border-top: 1px solid var(--border);
+}
+
+.quoteText {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(2.25rem, 6vw, 5.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  max-width: 16ch;
+  margin-left: auto;
+  text-wrap: balance;
+}
+
+.quoteTextSmall {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.75rem, 3vw, 2.75rem);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  max-width: 18ch;
+}
+
+.cite {
+  font-style: normal;
+  display: block;
+}
+
+.quote .cite {
+  margin-left: auto;
+}
+
+.band {
+  padding-block: 0 clamp(4rem, 8vw, 8rem);
+}
+
+.bandImage {
+  aspect-ratio: 21 / 9;
+  max-height: 80vh;
+}
+
+.values {
+  border-top: 1px solid var(--border);
+}
+
+.valuesHead {
+  margin-bottom: clamp(3rem, 5vw, 5rem);
+}
+
+.valuesTitle {
+  margin-top: 1rem;
+  max-width: 14ch;
+}
+
+.valuesGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid var(--border-strong);
+}
+
+.value {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 2rem clamp(1.5rem, 2.5vw, 2.5rem) 2.5rem 0;
+}
+
+.value + .value {
+  padding-left: clamp(1.5rem, 2.5vw, 2.5rem);
+  border-left: 1px solid var(--border);
+}
+
+.valueNum {
+  font-size: var(--fs-label);
+  letter-spacing: 0.15em;
+  color: var(--text-secondary);
+}
+
+.valueTitle {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.75rem, 2.6vw, 2.5rem);
+  line-height: 1.05;
+}
+
+.studioRow {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: clamp(1rem, 2.5vw, 2.5rem);
+  row-gap: 2.5rem;
+  align-items: center;
+  padding-bottom: clamp(4rem, 8vw, 8rem);
+}
+
+.studioImage {
+  grid-column: 1 / span 7;
+  aspect-ratio: 4 / 3;
+}
+
+.studioQuote {
+  grid-column: 9 / span 4;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.team {
+  border-top: 1px solid var(--border);
+}
+
+.teamHead {
+  margin-bottom: clamp(3rem, 5vw, 5rem);
+}
+
+.teamTitle {
+  margin-top: 1rem;
+  max-width: 14ch;
+}
+
+.teamGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: clamp(1.5rem, 3vw, 3rem);
+  row-gap: 3.5rem;
+}
+
+.person {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.person:nth-child(3n + 2) {
+  margin-top: clamp(2rem, 5vw, 5rem);
+}
+
+.portrait {
+  aspect-ratio: 3 / 4;
+  margin-bottom: 1rem;
+  background: #e7e6e2;
+}
+
+.personName {
+  font-family: var(--font-display);
+  font-size: 1.375rem;
+  line-height: 1.2;
+}
+
+@media (max-width: 899px) {
+  .heroText,
+  .heroImage,
+  .storyLabel,
+  .storyText,
+  .studioImage,
+  .studioQuote {
+    grid-column: 1 / -1;
+  }
+
+  .heroText {
+    padding-bottom: 0;
+  }
+
+  .quoteText {
+    margin-left: 0;
+  }
+
+  .quote .cite {
+    margin-left: 0;
+  }
+
+  .valuesGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .value + .value {
+    padding-left: 0;
+    border-left: 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .teamGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .person:nth-child(3n + 2) {
+    margin-top: 0;
+  }
+
+  .person:nth-child(even) {
+    margin-top: 2.5rem;
+  }
+}

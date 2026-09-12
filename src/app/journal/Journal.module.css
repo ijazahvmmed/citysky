@@ -1,0 +1,145 @@
+.index {
+  padding-top: calc(var(--nav-h) + clamp(4rem, 8vw, 8rem));
+  padding-bottom: var(--space-section);
+}
+
+.head {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: clamp(1rem, 2.5vw, 2.5rem);
+  row-gap: 1.5rem;
+  margin-bottom: clamp(3rem, 6vw, 6rem);
+}
+
+.head > :first-child {
+  grid-column: 1 / -1;
+}
+
+.title {
+  grid-column: 1 / span 8;
+}
+
+.lead {
+  grid-column: 9 / span 4;
+  align-self: end;
+  max-width: 34ch;
+}
+
+.list {
+  border-top: 1px solid var(--border-strong);
+}
+
+.row {
+  border-bottom: 1px solid var(--border);
+}
+
+.link {
+  position: relative;
+  display: grid;
+  grid-template-columns: 9rem minmax(0, 1fr) 11rem 2rem;
+  align-items: baseline;
+  column-gap: 2rem;
+  padding: clamp(1.5rem, 3vw, 2.5rem) 0;
+}
+
+.date {
+  white-space: nowrap;
+}
+
+.rowTitle {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 3.4vw, 3.25rem);
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  transition: transform 0.6s var(--ease-out), color 0.4s var(--ease-out);
+}
+
+.link:hover .rowTitle,
+.link:focus-visible .rowTitle {
+  transform: translateX(0.75rem);
+}
+
+.cat {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.arrow {
+  display: inline-flex;
+  justify-content: flex-end;
+  color: var(--text-secondary);
+  transition: transform 0.5s var(--ease-out), color 0.4s;
+}
+
+.arrowIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.link:hover .arrow {
+  transform: translateX(0.35rem);
+  color: var(--text-primary);
+}
+
+.thumb {
+  position: absolute;
+  right: 6rem;
+  top: 50%;
+  width: 220px;
+  height: 150px;
+  transform: translateY(-50%) rotate(-2deg) scale(0.96);
+  opacity: 0;
+  pointer-events: none;
+  overflow: hidden;
+  transition: opacity 0.5s var(--ease-out), transform 0.7s var(--ease-out);
+  z-index: 1;
+}
+
+.link:hover .thumb {
+  opacity: 1;
+  transform: translateY(-50%) rotate(0deg) scale(1);
+}
+
+.rowNum {
+  position: absolute;
+  left: 0;
+  top: 0.9rem;
+  font-size: 0.625rem;
+  letter-spacing: 0.15em;
+  color: var(--text-secondary);
+  opacity: 0.6;
+}
+
+@media (max-width: 899px) {
+  .title,
+  .lead {
+    grid-column: 1 / -1;
+  }
+
+  .link {
+    grid-template-columns: minmax(0, 1fr) 2rem;
+    row-gap: 0.75rem;
+    padding-top: 2.25rem;
+  }
+
+  .date {
+    grid-column: 1 / -1;
+  }
+
+  .rowTitle {
+    grid-column: 1;
+  }
+
+  .arrow {
+    grid-column: 2;
+  }
+
+  .cat {
+    grid-column: 1 / -1;
+    text-align: left;
+  }
+
+  .thumb {
+    display: none;
+  }
+}

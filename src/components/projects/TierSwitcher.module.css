@@ -1,0 +1,177 @@
+.switcher {
+  border-top: 1px solid var(--border);
+}
+
+.head {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: clamp(1rem, 2.5vw, 2.5rem);
+  row-gap: 1.5rem;
+  margin-bottom: clamp(2.5rem, 4vw, 4rem);
+}
+
+.head > :first-child {
+  grid-column: 1 / -1;
+}
+
+.title {
+  grid-column: 1 / span 7;
+  max-width: 14ch;
+}
+
+.lead {
+  grid-column: 9 / span 4;
+  align-self: end;
+  max-width: 34ch;
+}
+
+.stage {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  max-height: 82vh;
+  overflow: hidden;
+  background: #e7e6e2;
+  touch-action: pan-y;
+}
+
+.layer {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  will-change: opacity;
+}
+
+.layerOn {
+  opacity: 1;
+}
+
+.stageCaption {
+  position: absolute;
+  left: 1.5rem;
+  bottom: 1.5rem;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.85rem 1.1rem;
+  background: rgba(250, 250, 248, 0.94);
+  color: var(--text-primary);
+}
+
+.stageNumeral {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+}
+
+.stageName {
+  font-size: var(--fs-label);
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.stagePrice {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  padding-left: 1rem;
+  border-left: 1px solid var(--border-strong);
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 1.5rem;
+}
+
+.control {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 1.25rem 0;
+  text-align: left;
+  color: var(--text-secondary);
+  transition: color 0.4s var(--ease-out);
+}
+
+.control:hover {
+  color: var(--text-primary);
+}
+
+.controlOn {
+  color: var(--text-primary);
+}
+
+.controlNumeral {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+}
+
+.controlName {
+  font-size: var(--fs-label);
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.controlLine {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  background: var(--border);
+}
+
+.controlLine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--text-primary);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.6s var(--ease-inout);
+}
+
+.controlOn .controlLine::after {
+  transform: scaleX(1);
+}
+
+.note {
+  margin-top: 1rem;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.125rem;
+}
+
+@media (max-width: 899px) {
+  .title,
+  .lead {
+    grid-column: 1 / -1;
+  }
+
+  .stage {
+    aspect-ratio: 4 / 3;
+  }
+
+  .stageCaption {
+    left: 1rem;
+    bottom: 1rem;
+    gap: 0.75rem;
+    padding: 0.65rem 0.85rem;
+  }
+
+  .stagePrice {
+    display: none;
+  }
+
+  .controls {
+    grid-template-columns: 1fr;
+    margin-top: 0.5rem;
+  }
+
+  .control {
+    padding: 0.9rem 0;
+  }
+}

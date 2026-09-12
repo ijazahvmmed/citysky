@@ -1,0 +1,136 @@
+.entry {
+  padding-top: calc(var(--nav-h) + clamp(3rem, 7vw, 7rem));
+}
+
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  max-width: calc(var(--max-width));
+  margin-bottom: clamp(3rem, 6vw, 6rem);
+}
+
+.title {
+  max-width: 14ch;
+  font-size: clamp(2.75rem, 7vw, 6.5rem);
+  text-wrap: balance;
+}
+
+.excerpt {
+  max-width: 44ch;
+}
+
+.cover {
+  margin-bottom: clamp(3rem, 6vw, 6rem);
+}
+
+.coverImage {
+  aspect-ratio: 16 / 9;
+  max-height: 80vh;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: calc(65ch + 2 * var(--gutter));
+  margin-inline: auto;
+  padding-bottom: clamp(3rem, 6vw, 6rem);
+}
+
+.p {
+  font-size: 1.125rem;
+  line-height: 1.75;
+}
+
+.p:first-child::first-letter {
+  font-family: var(--font-display);
+  font-size: 3.4em;
+  line-height: 0.8;
+  float: left;
+  margin: 0.08em 0.12em 0 0;
+}
+
+.h2 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  line-height: 1.1;
+  margin-top: 2rem;
+}
+
+.quote {
+  margin-block: 2rem;
+  padding-left: 1.5rem;
+  border-left: 1px solid var(--accent);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.quoteText {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.625rem, 2.6vw, 2.25rem);
+  line-height: 1.2;
+}
+
+.quote cite {
+  font-style: normal;
+}
+
+.figure {
+  margin-block: 2rem;
+  width: min(100%, 900px);
+  margin-inline: calc((min(100%, 900px) - 100%) / 2);
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.figureImage {
+  aspect-ratio: 3 / 2;
+}
+
+.foot {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: clamp(1rem, 2.5vw, 2.5rem);
+  row-gap: 2rem;
+  padding-block: clamp(3rem, 5vw, 5rem);
+  border-top: 1px solid var(--border);
+  align-items: end;
+}
+
+.back {
+  grid-column: 1 / span 4;
+}
+
+.next {
+  grid-column: 6 / span 7;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.nextLink {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 2.6vw, 2.25rem);
+  text-transform: none;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+}
+
+@media (max-width: 1023px) {
+  .figure {
+    width: 100%;
+    margin-inline: 0;
+  }
+}
+
+@media (max-width: 899px) {
+  .back,
+  .next {
+    grid-column: 1 / -1;
+  }
+}

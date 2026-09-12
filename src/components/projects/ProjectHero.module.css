@@ -1,0 +1,77 @@
+.hero {
+  position: relative;
+  height: 100svh;
+  min-height: 600px;
+  overflow: hidden;
+  background: var(--bg-dark);
+  color: var(--text-inverse);
+}
+
+.media {
+  position: absolute;
+  top: -80px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  will-change: transform;
+}
+
+.shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom, rgba(20, 20, 20, 0.3), transparent 24%),
+    linear-gradient(to top, rgba(20, 20, 20, 0.7) 0%, rgba(20, 20, 20, 0.25) 40%, transparent 70%);
+  pointer-events: none;
+}
+
+.content {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: clamp(2.5rem, 7vh, 5rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.eyebrow {
+  color: rgba(250, 250, 248, 0.82);
+}
+
+.title {
+  max-width: 12ch;
+  text-wrap: balance;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.25rem;
+  margin-top: 1rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(250, 250, 248, 0.25);
+}
+
+.sep {
+  width: 1px;
+  height: 0.9rem;
+  background: rgba(250, 250, 248, 0.3);
+}
+
+.enquire {
+  margin-left: auto;
+}
+
+@media (max-width: 899px) {
+  .row {
+    gap: 0.9rem;
+  }
+
+  .enquire {
+    margin-left: 0;
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+}

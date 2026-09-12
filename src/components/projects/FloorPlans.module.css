@@ -1,0 +1,199 @@
+.plans {
+  border-top: 1px solid var(--border);
+}
+
+.head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-bottom: clamp(2.5rem, 4vw, 4rem);
+}
+
+.title {
+  margin-top: 1rem;
+}
+
+.tabs {
+  display: flex;
+  gap: 2rem;
+}
+
+.tab {
+  position: relative;
+  font-size: var(--fs-label);
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  padding-block: 0.5rem;
+  transition: color 0.4s var(--ease-out);
+}
+
+.tab::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.5s var(--ease-inout);
+}
+
+.tab:hover {
+  color: var(--text-primary);
+}
+
+.tabOn {
+  color: var(--text-primary);
+}
+
+.tabOn::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: clamp(1rem, 2.5vw, 2.5rem);
+  row-gap: 2.5rem;
+  align-items: start;
+}
+
+.figure {
+  grid-column: 1 / span 7;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.svg {
+  width: 100%;
+  height: auto;
+  color: var(--text-primary);
+  animation: planIn 0.8s var(--ease-out);
+}
+
+@keyframes planIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.outer {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 0.8;
+}
+
+.room rect {
+  fill: transparent;
+  stroke: currentColor;
+  stroke-width: 0.3;
+  transition: fill 0.4s var(--ease-out);
+}
+
+.room text {
+  fill: currentColor;
+  font-family: var(--font-body);
+  pointer-events: none;
+}
+
+.roomName {
+  font-size: 2.6px;
+  letter-spacing: 0.02em;
+}
+
+.roomDims {
+  font-size: 2px;
+  opacity: 0.55;
+}
+
+.roomOn rect {
+  fill: var(--accent-tint);
+  stroke: var(--accent);
+  stroke-width: 0.5;
+}
+
+.north line,
+.north path {
+  stroke: currentColor;
+  stroke-width: 0.3;
+  fill: none;
+}
+
+.figcap {
+  display: block;
+}
+
+.list {
+  grid-column: 9 / span 4;
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--border-strong);
+  counter-reset: room;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: var(--fs-small);
+  transition: color 0.3s var(--ease-out), padding-left 0.4s var(--ease-out);
+  cursor: default;
+}
+
+.item::before {
+  counter-increment: room;
+  content: counter(room, decimal-leading-zero);
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  margin-right: 1rem;
+}
+
+.itemName {
+  flex: 1;
+}
+
+.itemDims {
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.itemOn {
+  color: var(--accent);
+  padding-left: 0.5rem;
+}
+
+.itemOn .itemDims {
+  color: var(--accent);
+}
+
+@media (max-width: 899px) {
+  .figure,
+  .list {
+    grid-column: 1 / -1;
+  }
+
+  .roomName {
+    font-size: 3px;
+  }
+
+  .roomDims {
+    display: none;
+  }
+}
