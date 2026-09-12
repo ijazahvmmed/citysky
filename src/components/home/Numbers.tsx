@@ -12,7 +12,11 @@ export function Numbers() {
         <div className={styles.row}>
           {stats.map((s) => (
             <div key={s.label} className={styles.stat}>
-              <Counter value={s.value} className={styles.value} />
+              <Counter
+                value={s.value}
+                suffix={s.suffix}
+                className={styles.value}
+              />
               <span className="label muted">{s.label}</span>
             </div>
           ))}

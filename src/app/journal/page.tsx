@@ -21,7 +21,13 @@ export default function JournalPage() {
         <div className="container">
           <header className={styles.head}>
             <p className="eyebrow">Journal</p>
-            <RevealText as="h1" className={`display ${styles.title}`} immediate delay={0.2} id="journal-title">
+            <RevealText
+              as="h1"
+              className={`display ${styles.title}`}
+              immediate
+              delay={0.2}
+              id="journal-title"
+            >
               Notes from the practice.
             </RevealText>
             <p className={`body muted ${styles.lead}`} data-enter>
@@ -33,7 +39,11 @@ export default function JournalPage() {
           <ol className={styles.list}>
             {journal.map((e, i) => (
               <li key={e.slug} className={styles.row}>
-                <TransitionLink href={`/journal/${e.slug}`} className={styles.link} data-cursor="Read">
+                <TransitionLink
+                  href={`/journal/${e.slug}`}
+                  className={styles.link}
+                  data-cursor="Read"
+                >
                   <span className={`label muted ${styles.date}`}>
                     <time dateTime={e.date}>{formatDate(e.date)}</time>
                   </span>

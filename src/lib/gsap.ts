@@ -13,7 +13,9 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger, SplitText, Flip);
   gsap.defaults({ ease: "power3.out", duration: 1 });
   ScrollTrigger.config({ ignoreMobileResize: true });
-  window.addEventListener("load", () => ScrollTrigger.refresh(), { once: true });
+  window.addEventListener("load", () => ScrollTrigger.refresh(), {
+    once: true,
+  });
 }
 
 export const MOTION_OK = "(prefers-reduced-motion: no-preference)";

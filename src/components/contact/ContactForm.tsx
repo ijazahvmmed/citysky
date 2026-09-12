@@ -3,6 +3,8 @@
 import { useState, type FormEvent } from "react";
 import { site } from "@/lib/site";
 import { projects } from "@/lib/data/projects";
+
+const available = projects.filter((p) => !p.soldOut);
 import { whatsappLink } from "@/lib/whatsapp";
 import { track } from "@/lib/analytics";
 import { Arrow } from "@/components/ui/Arrow";
@@ -135,7 +137,7 @@ export function ContactForm() {
             onChange={update("project")}
           >
             <option>General enquiry</option>
-            {projects.map((p) => (
+            {available.map((p) => (
               <option key={p.slug} value={p.name}>
                 {p.name} — {p.status}
               </option>

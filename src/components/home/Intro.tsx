@@ -13,17 +13,16 @@ export function Intro() {
         </div>
         <div className={styles.text}>
           <RevealText as="p" className={`lede ${styles.lede}`}>
-            Citysky is a small practice in Kochi that designs and builds its own
-            homes. We take on a few projects at a time, in neighbourhoods we
-            know well, and stay with each one from the first site walk to the
-            day the furniture arrives.
+            Citysky has been building in Kochi for ten years. Six projects
+            across the city and Ernakulam, from a pair of houses on eleven cents
+            to fourteen homes around a courtyard.
           </RevealText>
           <div className={styles.meta}>
             <p className="body muted measure">
-              Two completed projects in Nettoor and Vaduthala, one under
-              construction, one on the drawing board. Every home is offered
-              unfurnished, semi-furnished, or complete, with interiors drawn by
-              the same hands that drew the house.
+              Every home is offered in three states of completion, so you can
+              decide how much of the finishing you want to take on yourself. The
+              interiors are drawn by the same people who drew the building,
+              which is the only way we have found to make them agree.
             </p>
             <ArrowLink href="/about">About the studio</ArrowLink>
           </div>

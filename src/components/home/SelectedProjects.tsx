@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useRef } from "react";
 import { gsap, DESKTOP, MOTION_OK } from "@/lib/gsap";
-import { projects } from "@/lib/data/projects";
+import { featuredProjects, projectEra } from "@/lib/data/projects";
 import { imageBlur, imageSrc } from "@/lib/images";
 import { cx } from "@/lib/cx";
 import { TransitionLink } from "@/components/layout/TransitionLink";
@@ -58,14 +58,14 @@ export function SelectedProjects() {
             className={`h-section ${styles.title}`}
             id="projects-heading"
           >
-            Four projects, two neighbourhoods.
+            Ten years of building in Kochi.
           </RevealText>
         </div>
         <ArrowLink href="/projects">All projects</ArrowLink>
       </div>
 
       <div ref={track} className={styles.track} data-cursor="Scroll">
-        {projects.map((p, i) => (
+        {featuredProjects.map((p, i) => (
           <TransitionLink
             key={p.slug}
             href={`/projects/${p.slug}`}
@@ -99,7 +99,11 @@ export function SelectedProjects() {
                   <span className={styles.sep} aria-hidden>
                     ·
                   </span>
-                  <span>{p.units} homes</span>
+                  <span>{projectEra(p)}</span>
+                  <span className={styles.sep} aria-hidden>
+                    ·
+                  </span>
+                  <span>{p.configuration}</span>
                 </p>
               </div>
             </div>

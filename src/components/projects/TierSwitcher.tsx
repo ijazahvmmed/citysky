@@ -2,7 +2,13 @@
 
 import Image from "next/image";
 import { useRef, useState, type KeyboardEvent, type TouchEvent } from "react";
-import { tiers, type Project, type TierKey } from "@/lib/data/projects";
+import {
+  tiers,
+  tierPriceLabel,
+  tierImages,
+  type Project,
+  type TierKey,
+} from "@/lib/data/projects";
 import { imageBlur, imageSrc } from "@/lib/images";
 import { track } from "@/lib/analytics";
 import { cx } from "@/lib/cx";
@@ -53,6 +59,7 @@ export function TierSwitcher({ project }: { project: Project }) {
   };
 
   const current = tiers.find((t) => t.key === tier)!;
+  const price = tierPriceLabel(project, tier);
 
   return (
     <section
@@ -70,8 +77,9 @@ export function TierSwitcher({ project }: { project: Project }) {
             The same room, three ways.
           </RevealText>
           <p className={`body muted ${styles.lead}`}>
-            Select a tier to see how the living room at {project.name} arrives
-            on handover day. Swipe on a phone.
+            {project.soldOut
+              ? `Select a tier to see how a living room at ${project.name} was handed over. Swipe on a phone.`
+              : `Select a tier to see how the living room at ${project.name} arrives on handover day. Swipe on a phone.`}
           </p>
         </div>
 
@@ -82,7 +90,7 @@ export function TierSwitcher({ project }: { project: Project }) {
           data-cursor="Drag"
         >
           {order.map((k) => {
-            const image = project.tierImages[k];
+            const image = tierImages[k];
             const on = k === tier;
             return (
               <div
@@ -106,7 +114,7 @@ export function TierSwitcher({ project }: { project: Project }) {
           <div className={styles.stageCaption} aria-live="polite">
             <span className={styles.stageNumeral}>{current.numeral}</span>
             <span className={styles.stageName}>{current.name}</span>
-            <span className={styles.stagePrice}>{project.pricing[tier]}</span>
+            {price && <span className={styles.stagePrice}>{price}</span>}
           </div>
         </div>
 

@@ -4,7 +4,9 @@ import { site } from "./site";
  * Build a WhatsApp deep link with a pre-filled message.
  * Project name is woven into the message when provided.
  */
-export function whatsappLink(opts: { project?: string; message?: string } = {}) {
+export function whatsappLink(
+  opts: { project?: string; message?: string } = {},
+) {
   const message =
     opts.message ??
     (opts.project

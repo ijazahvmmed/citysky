@@ -19,35 +19,43 @@ export interface JournalEntry {
 
 export const journal: JournalEntry[] = [
   {
-    slug: "why-we-build-in-nettoor",
-    title: "Why we build in Nettoor",
+    slug: "notes-from-mirzad-road",
+    title: "Notes from the Mirzad Road site",
     date: "2026-08-14",
-    category: "Place",
-    readingTime: "5 min",
+    category: "Site",
+    readingTime: "4 min",
     excerpt:
-      "A neighbourhood on the quiet side of the city, where the land is long and low and the backwater is never far.",
-    cover: img("1600607688969-a5bfcd646154", "Villa beneath a mature tree in Nettoor"),
+      "Two villas finished and lived in, six under way, and a decision about the garden edge that took longer than it should have.",
+    cover: img(
+      "1600585154363-67eb9e2e2099",
+      "Dark-clad villa under a large tree at dusk, Mirzad Road",
+    ),
     body: [
       {
         type: "p",
-        text: "Nettoor is not on the way to anywhere. That is most of the point. The main road out of Kochi bends east before it reaches the village, and what remains is a grid of lanes, a few temples, a school, and a long edge of backwater that the palms lean over.",
+        text: "The first two villas at Mirzad Road were handed over at the start of the year and both families have been in since. Walking past them now, the thing we keep noticing is how much time is spent on the veranda rather than in the living room behind it. That was the intention, but intention and habit are different things, and it is good to see them agree.",
       },
       {
         type: "p",
-        text: "We first walked the site that became Nettoor Residences in 2021. It was a paddy holding that had not been cultivated for a decade, with a bund on its western side and a drainage channel running the length of it. The soil was soft, the water table high. It was not an obvious place to build twelve houses.",
+        text: "Six villas remain. Structure is up on four, and the first of those has its roof on. Finishing starts after the monsoon, and handovers are phased through 2026.",
       },
+      { type: "h2", text: "The garden edge" },
       {
-        type: "h2",
-        text: "Working with the ground",
+        type: "p",
+        text: "The land falls away to the south, which is what made the site worth buying and also what has taken us longest to resolve. We had drawn a low retaining wall with a timber deck sitting on top of it, running the width of each garden.",
       },
       {
         type: "p",
-        text: "The engineering answer was piles, and we used them. The architectural answer was to raise the houses on a plinth of laterite and let the ground floor be a little above the lane, so the verandas look over the courtyard rather than into it. The channel became a planted swale. It floods for a few days each August and drains within the week.",
+        text: "The October rains put more water across that edge than our survey had suggested, so the deck has moved up by 400mm and pulled back about a metre. A planted swale takes the run-off now. Better to lose a little terrace than to have it standing in water for a week each year.",
       },
       {
         type: "image",
-        image: img("1600585153490-76fb20a32601", "Living room opening onto the courtyard"),
-        caption: "Every living room at Nettoor opens onto the shared courtyard.",
+        image: img(
+          "1600573472591-ee6b68d14c68",
+          "Living room with polished concrete floor opening onto a veranda",
+        ),
+        caption:
+          "The veranda runs the full south face of each villa, deep enough to leave a door open through a downpour.",
       },
       {
         type: "quote",
@@ -55,7 +63,7 @@ export const journal: JournalEntry[] = [
       },
       {
         type: "p",
-        text: "What we could not have designed is the way the neighbourhood took to the project. The tea shop on the corner has extended its awning. Two of the owners have started a shared vegetable bed in the swale. The houses were finished in March 2024; the place is still being made.",
+        text: "We will post again when the first of the six has its kitchen in.",
       },
     ],
   },
@@ -67,7 +75,10 @@ export const journal: JournalEntry[] = [
     readingTime: "6 min",
     excerpt:
       "Four months of rain a year is not a constraint to be managed. It is the climate the house is for.",
-    cover: img("1602216056096-3b40cc0c9944", "Kerala backwater under monsoon cloud"),
+    cover: img(
+      "1602216056096-3b40cc0c9944",
+      "Kerala backwater under monsoon cloud, coconut palms along the bank",
+    ),
     body: [
       {
         type: "p",
@@ -84,13 +95,21 @@ export const journal: JournalEntry[] = [
       },
       {
         type: "image",
-        image: img("1600573472591-ee6b68d14c68", "Living room with concrete floor and rocking chair"),
-        caption: "Polished concrete, teak and a deep veranda at Vaduthala Project Two.",
+        image: img(
+          "1600607687939-ce8a6c25118c",
+          "Living room with timber ceiling opening onto a garden",
+        ),
+        caption:
+          "Timber ceilings run out to the veranda, so the room reads as one space when the doors are open.",
       },
       { type: "h2", text: "Light without heat" },
       {
         type: "p",
         text: "North light is the easy one. The harder problem is the west, where the sun comes low and hot in the evening and where, in Kochi, the best breeze also comes from. Louvred timber shutters on the west elevation let the air through and take the sun out. They are the single most useful detail we draw.",
+      },
+      {
+        type: "p",
+        text: "Perumbavoor tested that thinking hardest. An hour inland, without the sea breeze the city gets, a building has to make its own air movement or the rooms never cool down after dark. Both blocks there are single-banked, so every apartment has windows on opposite walls, and the stair halls are open to the sky and work as chimneys.",
       },
       {
         type: "quote",
@@ -105,12 +124,15 @@ export const journal: JournalEntry[] = [
     category: "Homes",
     readingTime: "4 min",
     excerpt:
-      "Why three quarters of our buyers now take the fully furnished tier, and why we think they are right to.",
-    cover: img("1600210491369-e753d80a41f3", "Minimal living room with artwork and white sofa"),
+      "Why most of our buyers now take the fully furnished tier, and why we think they are right to.",
+    cover: img(
+      "1600210491369-e753d80a41f3",
+      "Minimal living room with artwork and white sofa",
+    ),
     body: [
       {
         type: "p",
-        text: "When we handed over the first homes at Vaduthala Project One, we offered them unfurnished. Within a year, most of the owners had asked us to come back and help. The sofas they had bought were the wrong scale for the double-height room. The curtain rails did not clear the window heads. The dining table sat under the wrong light.",
+        text: "When we handed over the first homes at Nettoor, we offered them unfurnished, because that was what everyone did. Within a year, several of the owners had asked us to come back and help. The sofas they had bought were the wrong scale for rooms that open onto a courtyard. The curtain rails did not clear the window heads. The dining table sat under the wrong light.",
       },
       {
         type: "p",
@@ -119,45 +141,73 @@ export const journal: JournalEntry[] = [
       { type: "h2", text: "What changed" },
       {
         type: "p",
-        text: "From Nettoor onwards we have drawn the furniture with the house. The same proportions, the same timber, the same restraint. Pieces are sourced from makers in Kerala and Tamil Nadu, and installed in the week before handover by our own team. The owner walks into a finished room.",
+        text: "So we started drawing the furniture with the house. The same proportions, the same timber, the same restraint. Pieces are sourced from makers in Kerala and Tamil Nadu, and installed by our own team in the week before handover. The owner walks into a finished room.",
       },
       {
         type: "image",
-        image: img("1618221195710-dd6b41faaea6", "Fully furnished living room with warm light"),
-        caption: "A fully furnished living room at Nettoor Residences, the week before handover.",
+        image: img(
+          "1615529182904-14819c35db37",
+          "Fully furnished living room with warm light, rug and planting",
+        ),
+        caption:
+          "A fully furnished living room the week before handover: sourced, delivered and installed by the same team.",
       },
       {
         type: "p",
-        text: "Nine of the twelve homes at Nettoor were taken fully furnished. At Vaduthala Project Two the number is already seven of ten. We do not push it. The rooms make the argument.",
+        text: "Not everyone wants it, which is why all three tiers still exist. Unfurnished suits people who already own furniture they love, or who would rather take their time. Semi-furnished gets a family through the first month without committing to everything at once.",
+      },
+      {
+        type: "p",
+        text: "But most buyers now take the fully furnished tier, and the ones who do tend to say the same thing: they had underestimated how much coordination they were signing up for. We do not push it. The rooms make the argument.",
       },
     ],
   },
   {
-    slug: "vaduthala-site-notes-week-40",
-    title: "Notes from the Vaduthala site, week 40",
+    slug: "four-homes-on-sixteen-cents",
+    title: "Four homes on sixteen cents",
     date: "2026-01-09",
-    category: "Site",
-    readingTime: "3 min",
+    category: "Place",
+    readingTime: "5 min",
     excerpt:
-      "Roofs on, cladding begun, and a decision about the canal edge that took longer than it should have.",
-    cover: img("1600585154084-4e5fe7c39198", "Black timber villa with lit windows at night"),
+      "What we learned at 1008 about building densely without anyone feeling crowded.",
+    cover: img(
+      "1613490493576-7fde63acd811",
+      "White rendered elevation with pool and planting at 1008",
+    ),
     body: [
       {
         type: "p",
-        text: "All ten roofs are on at Project Two. The charred timber cladding started on the lower terrace this week, and the first panels have gone up on the villa nearest the canal. The colour reads darker in the drawings than it does on site, which is what we hoped.",
+        text: "Sixteen cents is not much land for four homes. The obvious move on a plot that size is four identical units facing the same direction, sharing party walls, each looking at the back of the next. It is efficient and it is miserable to live in.",
       },
       {
         type: "p",
-        text: "The canal edge has been the slow question. We had drawn a low laterite wall with a timber deck above it. The water rose higher than our survey suggested in the October rains, and we have moved the deck up by 400mm and pulled it back a metre. Better to lose a little terrace than to have it under water for a week each year.",
+        text: "We spent most of the design time at 1008 avoiding it. The four homes ended up sitting at slightly different angles, each turned a few degrees off its neighbour. It sounds like a small thing. It is the whole project.",
+      },
+      { type: "h2", text: "What the angles buy" },
+      {
+        type: "p",
+        text: "Two things. First, no window looks directly into another, so nobody closes their curtains during the day and nobody ends up living in a dim room for the sake of privacy.",
+      },
+      {
+        type: "p",
+        text: "Second, the wedge-shaped gaps that open up between the houses become small private courts, one for each home. On a deep infill plan the middle of the house is the part that goes dark. These courts fix that without borrowing an inch from anyone.",
       },
       {
         type: "image",
-        image: img("1600585154526-990dced4db0d", "Villa elevation at dusk"),
-        caption: "The lower terrace at dusk, before the cladding.",
+        image: img(
+          "1600210491892-03d54c0aaf87",
+          "Living room with arched windows and timber floor",
+        ),
+        caption:
+          "Private courts pull daylight into the centre of each plan, where a deep infill house would otherwise go dark.",
+      },
+      {
+        type: "quote",
+        text: "Density is not the problem. Four houses all facing the same way is the problem.",
       },
       {
         type: "p",
-        text: "Finishing begins in February. We will post again when the first kitchen goes in.",
+        text: "All four were handed over in 2022. The families have since planted the shared entrance considerably better than we drew it, which is usually the sign that a place has been taken over properly.",
       },
     ],
   },

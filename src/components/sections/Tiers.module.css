@@ -108,6 +108,22 @@
   line-height: 1;
 }
 
+.soldOut {
+  font-family: var(--font-body);
+  font-size: var(--fs-label);
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  padding: 0.35rem 0.7rem;
+  border: 1px solid var(--border-strong);
+}
+
+.upliftNote {
+  margin-top: 1.75rem;
+  max-width: 52ch;
+}
+
 .includes {
   display: flex;
   flex-direction: column;

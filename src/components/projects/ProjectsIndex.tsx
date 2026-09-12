@@ -2,7 +2,13 @@
 
 import { useLayoutEffect, useRef, useState } from "react";
 import { gsap, Flip, ScrollTrigger, prefersReducedMotion } from "@/lib/gsap";
-import { projects, type Area, type ProjectStatus } from "@/lib/data/projects";
+import {
+  projects,
+  statusFilters,
+  areaFilters,
+  type Area,
+  type ProjectStatus,
+} from "@/lib/data/projects";
 import { cx } from "@/lib/cx";
 import { TransitionLink } from "@/components/layout/TransitionLink";
 import { RevealImage } from "@/components/motion/RevealImage";
@@ -13,13 +19,8 @@ import styles from "./ProjectsIndex.module.css";
 type StatusFilter = "All" | ProjectStatus;
 type AreaFilter = "All" | Area;
 
-const statusOptions: StatusFilter[] = [
-  "All",
-  "Completed",
-  "Ongoing",
-  "Upcoming",
-];
-const areaOptions: AreaFilter[] = ["All", "Nettoor", "Vaduthala"];
+const statusOptions = statusFilters as readonly StatusFilter[];
+const areaOptions = areaFilters as readonly AreaFilter[];
 
 export function ProjectsIndex() {
   const [status, setStatus] = useState<StatusFilter>("All");
@@ -79,11 +80,11 @@ export function ProjectsIndex() {
             delay={0.2}
             id="projects-title"
           >
-            Built in Kochi.
+            Built in Kochi and Ernakulam.
           </RevealText>
           <p className={`body muted ${styles.lead}`} data-enter>
-            Two neighbourhoods, four projects, and a way of building that has
-            not changed much between them. Filter by status or by place.
+            Six projects over ten years, from a pair of houses on eleven cents
+            to fourteen homes around a courtyard. Filter by status or by place.
           </p>
         </header>
 
@@ -184,8 +185,12 @@ export function ProjectsIndex() {
                     >
                       {p.status}
                     </span>
+                    {p.year && (
+                      <span className="small muted">{p.year}</span>
+                    )}
                     <span className="small muted">{p.location}</span>
-                    <span className="small muted">{p.units} homes</span>
+                    <span className="small muted">{p.configuration}</span>
+                    {p.soldOut && <span className="small muted">Sold out</span>}
                   </div>
                 </div>
               </TransitionLink>

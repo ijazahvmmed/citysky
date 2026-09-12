@@ -15,13 +15,7 @@ import { ArrowLink } from "@/components/ui/ArrowLink";
 import styles from "./ProjectHero.module.css";
 import { useIsomorphicLayoutEffect } from "@/lib/useIsomorphicLayoutEffect";
 
-export function ProjectHero({
-  project,
-  index,
-}: {
-  project: Project;
-  index: number;
-}) {
+export function ProjectHero({ project }: { project: Project }) {
   useNavInverse(true);
   const pathname = usePathname();
   const section = useRef<HTMLElement>(null);
@@ -85,7 +79,7 @@ export function ProjectHero({
           immediate
           delay={0.4}
         >
-          Project 0{index + 1} — {project.location}
+          {project.location}
         </RevealText>
         <RevealText
           as="h1"
@@ -101,24 +95,32 @@ export function ProjectHero({
           >
             {project.status}
           </span>
+          {project.year && (
+            <>
+              <span className={styles.sep} aria-hidden="true" />
+              <span className="label">{project.year}</span>
+            </>
+          )}
           <span className={styles.sep} aria-hidden="true" />
-          <span className="label">{project.units} homes</span>
-          <span className={styles.sep} aria-hidden="true" />
-          <span className="label">{project.unitTypes}</span>
-          <ArrowLink
-            href={whatsappLink({ project: project.name })}
-            className={styles.enquire}
-            onClick={() =>
-              track({
-                name: "whatsapp_click",
-                page: pathname,
-                section: "project-hero",
-                project: project.name,
-              })
-            }
-          >
-            Enquire
-          </ArrowLink>
+          <span className="label">{project.configuration}</span>
+          {project.soldOut ? (
+            <span className={`label ${styles.soldOut}`}>Sold out</span>
+          ) : (
+            <ArrowLink
+              href={whatsappLink({ project: project.name })}
+              className={styles.enquire}
+              onClick={() =>
+                track({
+                  name: "whatsapp_click",
+                  page: pathname,
+                  section: "project-hero",
+                  project: project.name,
+                })
+              }
+            >
+              Enquire
+            </ArrowLink>
+          )}
         </div>
       </div>
     </section>

@@ -19,7 +19,13 @@ export default function ContactPage() {
       <div className={`container ${styles.grid}`}>
         <div className={styles.left}>
           <p className="eyebrow">Contact</p>
-          <RevealText as="h1" className={`display ${styles.title}`} immediate delay={0.2} id="contact-title">
+          <RevealText
+            as="h1"
+            className={`display ${styles.title}`}
+            immediate
+            delay={0.2}
+            id="contact-title"
+          >
             Come and talk to us.
           </RevealText>
           <p className={`body muted ${styles.lead}`} data-enter>
@@ -31,7 +37,12 @@ export default function ContactPage() {
             <div className={styles.detail}>
               <dt className="label muted">WhatsApp</dt>
               <dd>
-                <a href={whatsappLink()} target="_blank" rel="noopener noreferrer" className={`u-line ${styles.big}`}>
+                <a
+                  href={whatsappLink()}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`u-line ${styles.big}`}
+                >
                   {site.phone}
                 </a>
               </dd>

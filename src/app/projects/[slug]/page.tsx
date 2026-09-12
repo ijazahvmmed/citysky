@@ -34,7 +34,9 @@ export async function generateMetadata({
   };
 }
 
-export default async function ProjectPage({ params }: PageProps<"/projects/[slug]">) {
+export default async function ProjectPage({
+  params,
+}: PageProps<"/projects/[slug]">) {
   const { slug } = await params;
   const project = getProject(slug);
   if (!project) notFound();
@@ -45,17 +47,25 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
   return (
     <>
       <ProjectAnalytics project={project.name} />
-      <ProjectHero project={project} index={index} />
+      <ProjectHero project={project} />
       <ProjectOverview project={project} />
       <ProjectGallery items={project.gallery} />
       <FloorPlans plans={project.floorPlans} />
       <Specs specs={project.specs} />
-      <Tiers pricing={project.pricing} project={project.name} showCompare={false} />
+      <Tiers project={project} showCompare={false} />
       <TierSwitcher project={project} />
       <LocationMap project={project} />
       <CatalogDownload project={project} />
       <NextProject project={next} />
-      <ContactCTA project={project.name} section="project-cta" />
+      {project.soldOut ? (
+        <ContactCTA
+          headline="This one is finished. Ask about what we are building now."
+          copy={`${project.name} is complete and sold out. Mirzad Road and Taqva Road are open, at every level of finish.`}
+          section="project-cta-sold-out"
+        />
+      ) : (
+        <ContactCTA project={project.name} section="project-cta" />
+      )}
     </>
   );
 }

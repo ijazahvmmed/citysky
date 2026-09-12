@@ -1,4 +1,4 @@
-import type { Project } from "@/lib/data/projects";
+import { formatPrice, type Project } from "@/lib/data/projects";
 import { RevealText } from "@/components/motion/RevealText";
 import styles from "./ProjectOverview.module.css";
 
@@ -6,11 +6,23 @@ export function ProjectOverview({ project }: { project: Project }) {
   const meta: [string, string][] = [
     ["Location", project.location],
     ["Status", project.status],
-    ["Total units", `${project.units}`],
+    ...(project.year
+      ? ([["Year", String(project.year)]] as [string, string][])
+      : []),
+    ["Configuration", project.configuration],
+    ...(project.units
+      ? ([["Total units", String(project.units)]] as [string, string][])
+      : []),
     ["Unit types", project.unitTypes],
     ["Plot area", project.plotArea],
     ["Built-up area", project.builtUp],
     ["Completion", project.completion],
+    [
+      "Price",
+      project.soldOut
+        ? "Sold out"
+        : `${formatPrice(project.basePrice)} unfurnished`,
+    ],
   ];
 
   return (

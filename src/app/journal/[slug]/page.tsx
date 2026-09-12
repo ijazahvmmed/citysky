@@ -29,7 +29,9 @@ export async function generateMetadata({
   };
 }
 
-export default async function EntryPage({ params }: PageProps<"/journal/[slug]">) {
+export default async function EntryPage({
+  params,
+}: PageProps<"/journal/[slug]">) {
   const { slug } = await params;
   const entry = getEntry(slug);
   if (!entry) notFound();
@@ -48,7 +50,12 @@ export default async function EntryPage({ params }: PageProps<"/journal/[slug]">
             <span aria-hidden="true"> · </span>
             {entry.readingTime}
           </p>
-          <RevealText as="h1" className={`display ${styles.title}`} immediate delay={0.2}>
+          <RevealText
+            as="h1"
+            className={`display ${styles.title}`}
+            immediate
+            delay={0.2}
+          >
             {entry.title}
           </RevealText>
           <p className={`h-sub muted ${styles.excerpt}`} data-enter>
@@ -95,7 +102,11 @@ export default async function EntryPage({ params }: PageProps<"/journal/[slug]">
                       width={1800}
                     />
                     {b.caption && (
-                      <figcaption className={`small muted ${styles.figcaption}`}>{b.caption}</figcaption>
+                      <figcaption
+                        className={`small muted ${styles.figcaption}`}
+                      >
+                        {b.caption}
+                      </figcaption>
                     )}
                   </figure>
                 );
@@ -115,7 +126,11 @@ export default async function EntryPage({ params }: PageProps<"/journal/[slug]">
           </ArrowLink>
           <div className={styles.next}>
             <p className="label muted">Next entry</p>
-            <ArrowLink href={`/journal/${next.slug}`} size="lg" className={styles.nextLink}>
+            <ArrowLink
+              href={`/journal/${next.slug}`}
+              size="lg"
+              className={styles.nextLink}
+            >
               {next.title}
             </ArrowLink>
           </div>

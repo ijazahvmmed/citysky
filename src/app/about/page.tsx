@@ -12,9 +12,18 @@ export const metadata: Metadata = {
     "Citysky Builders is a small design-and-build practice in Kochi. The story, the way of working, and the people behind the homes.",
 };
 
-const portrait = img("1600585154526-990dced4db0d", "Charred-timber villa elevation at dusk, Vaduthala");
-const band = img("1602216056096-3b40cc0c9944", "Kerala backwater under monsoon cloud, coconut palms along the bank");
-const studio = img("1600607687939-ce8a6c25118c", "Living room with timber ceiling opening onto a garden");
+const portrait = img(
+  "1600585154526-990dced4db0d",
+  "Charred-timber villa elevation at dusk, Vaduthala",
+);
+const band = img(
+  "1602216056096-3b40cc0c9944",
+  "Kerala backwater under monsoon cloud, coconut palms along the bank",
+);
+const studio = img(
+  "1600607687939-ce8a6c25118c",
+  "Living room with timber ceiling opening onto a garden",
+);
 
 const values = [
   {
@@ -38,12 +47,18 @@ export default function AboutPage() {
         <div className={`container ${styles.heroGrid}`}>
           <div className={styles.heroText}>
             <p className="eyebrow">The studio</p>
-            <RevealText as="h1" className={`display ${styles.title}`} immediate delay={0.2} id="about-title">
+            <RevealText
+              as="h1"
+              className={`display ${styles.title}`}
+              immediate
+              delay={0.2}
+              id="about-title"
+            >
               A small practice, building slowly.
             </RevealText>
             <p className={`h-sub muted ${styles.heroLead}`} data-enter>
-              Citysky was started in Kochi in 2014 by an architect and a
-              contractor who kept finding themselves on the same sites. Twelve
+              Citysky was started in Kochi in 2016 by an architect and a
+              contractor who kept finding themselves on the same sites. Ten
               years on, it is still a practice of a dozen people that designs,
               builds and furnishes a handful of homes at a time.
             </p>
@@ -59,36 +74,39 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className={`section ${styles.story}`} aria-labelledby="story-heading">
+      <section
+        className={`section ${styles.story}`}
+        aria-labelledby="story-heading"
+      >
         <div className={`container ${styles.storyGrid}`}>
           <div className={styles.storyLabel}>
             <p className="eyebrow" id="story-heading">
-              Since 2014
+              Since 2016
             </p>
           </div>
           <div className={styles.storyText}>
             <RevealText as="p" className={`lede ${styles.storyLede}`}>
-              We began with a single house for a family in Kadavanthra, drawn
-              on the kitchen table and built by the people who drew it.
+              We began at Nettoor with fourteen homes around a courtyard, and
+              learned most of what we still believe by building it.
             </RevealText>
             <p className="body muted measure">
-              That house taught us most of what we still believe: that the site
-              knows more than the brief, that Kerala&rsquo;s climate is a collaborator
-              rather than a problem, and that the gap between a good drawing and
-              a good home is closed on site, one decision at a time.
+              That first project taught us that the site knows more than the
+              brief, that Kerala&rsquo;s climate is a collaborator rather than a
+              problem, and that the gap between a good drawing and a good home
+              is closed on site, one decision at a time.
             </p>
             <p className="body muted measure">
-              Since then we have completed two larger projects, at Nettoor and
-              Vaduthala, and started a third. We have never had a sales team.
-              Most of our buyers were introduced by people who already live in
-              one of our houses, which is the only kind of growth we are
-              interested in.
+              Six projects have followed: two homes near Salafi, fourteen
+              apartments at Perumbavoor, four homes at 1008, and the villas now
+              going up along Mirzad Road. We have never had a sales team. Most
+              of our buyers were introduced by people who already live in one of
+              our houses, which is the only kind of growth we are interested in.
             </p>
             <p className="body muted measure">
-              In 2023 we brought interiors in-house, so that the person who
-              draws a room can also decide what goes in it. Three quarters of
-              our homes are now handed over fully furnished. The rooms make a
-              better argument than we can.
+              We later brought interiors in-house, so the person who draws a
+              room can also decide what goes in it. Most of our homes are now
+              handed over fully furnished. The rooms make a better argument than
+              we can.
             </p>
           </div>
         </div>
@@ -98,18 +116,33 @@ export default function AboutPage() {
         <RevealText as="p" className={styles.quoteText}>
           We would rather build ten houses well than a hundred quickly.
         </RevealText>
-        <cite className={`label muted ${styles.cite}`}>Arjun Menon, founder</cite>
+        <cite className={`label muted ${styles.cite}`}>
+          Arjun Menon, founder
+        </cite>
       </blockquote>
 
       <section className={styles.band} aria-hidden="true">
-        <RevealImage image={band} className={styles.bandImage} sizes="100vw" parallax={70} width={2400} />
+        <RevealImage
+          image={band}
+          className={styles.bandImage}
+          sizes="100vw"
+          parallax={70}
+          width={2400}
+        />
       </section>
 
-      <section className={`section ${styles.values}`} aria-labelledby="values-heading">
+      <section
+        className={`section ${styles.values}`}
+        aria-labelledby="values-heading"
+      >
         <div className="container">
           <div className={styles.valuesHead}>
             <p className="eyebrow">What we hold to</p>
-            <RevealText as="h2" className={`h-section ${styles.valuesTitle}`} id="values-heading">
+            <RevealText
+              as="h2"
+              className={`h-section ${styles.valuesTitle}`}
+              id="values-heading"
+            >
               Three things we do not negotiate.
             </RevealText>
           </div>
@@ -127,7 +160,10 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className={`container ${styles.studioRow}`} aria-label="The studio at work">
+      <section
+        className={`container ${styles.studioRow}`}
+        aria-label="The studio at work"
+      >
         <RevealImage
           image={studio}
           className={styles.studioImage}
@@ -139,15 +175,24 @@ export default function AboutPage() {
             A house is finished when someone forgets to notice it, and simply
             lives there.
           </RevealText>
-          <cite className={`label muted ${styles.cite}`}>Lakshmi Nair, interiors</cite>
+          <cite className={`label muted ${styles.cite}`}>
+            Lakshmi Nair, interiors
+          </cite>
         </blockquote>
       </section>
 
-      <section className={`section ${styles.team}`} aria-labelledby="team-heading">
+      <section
+        className={`section ${styles.team}`}
+        aria-labelledby="team-heading"
+      >
         <div className="container">
           <div className={styles.teamHead}>
             <p className="eyebrow">The people</p>
-            <RevealText as="h2" className={`h-section ${styles.teamTitle}`} id="team-heading">
+            <RevealText
+              as="h2"
+              className={`h-section ${styles.teamTitle}`}
+              id="team-heading"
+            >
               Twelve of us, on site most days.
             </RevealText>
           </div>
@@ -171,7 +216,7 @@ export default function AboutPage() {
 
       <ContactCTA
         headline="Come and see how we work."
-        copy="The studio is in Vaduthala, a short walk from Project One. Visitors are welcome by appointment, most weekdays."
+        copy="The studio is in Vaduthala, a short walk from the Salafi houses. Visitors are welcome by appointment, most weekdays."
       />
     </>
   );

@@ -8,6 +8,10 @@ import { Arrow } from "@/components/ui/Arrow";
 import styles from "./CatalogDownload.module.css";
 
 export function CatalogDownload({ project }: { project: Project }) {
+  // A sold-out project with no PDF would only offer a WhatsApp request, which
+  // is an enquiry CTA for a home that is no longer available. Hide it instead.
+  if (project.soldOut && !project.catalogUrl) return null;
+
   return (
     <section
       className={`section ${styles.catalog}`}
@@ -26,8 +30,9 @@ export function CatalogDownload({ project }: { project: Project }) {
         </div>
         <div className={styles.action}>
           <p className="body muted measure">
-            Plans, specifications, tier pricing and the furnishing schedule for{" "}
-            {project.name}, in one document.
+            {project.soldOut
+              ? `Plans, specifications and the furnishing schedule for ${project.name}, kept as a record of how it was built.`
+              : `Plans, specifications, tier pricing and the furnishing schedule for ${project.name}, in one document.`}
           </p>
           {project.catalogUrl ? (
             <a
