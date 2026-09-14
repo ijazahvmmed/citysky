@@ -18,6 +18,18 @@ interface TransitionCtx {
 
 const Ctx = createContext<TransitionCtx>({ navigate: () => {} });
 
+/**
+ * Remove every inline transform-ish property GSAP leaves on the page wrapper.
+ * A transform on this element makes it the containing block for fixed-position
+ * descendants, which breaks ScrollTrigger pinning inside the page.
+ */
+function clearWrapper(el: HTMLElement | null) {
+  if (!el) return;
+  gsap.set(el, {
+    clearProps: "transform,translate,rotate,scale,opacity,willChange",
+  });
+}
+
 export const usePageTransition = () => useContext(Ctx);
 
 /**
@@ -73,7 +85,7 @@ export function TransitionProvider({
           busy.current = false;
           pending.current = null;
           gsap.set(panel.current, { yPercent: 100 });
-          gsap.set(page.current, { opacity: 1, y: 0 });
+          clearWrapper(page.current);
         }
       });
     },
@@ -94,6 +106,11 @@ export function TransitionProvider({
       onComplete: () => {
         busy.current = false;
         gsap.set(p, { yPercent: 100 });
+        // Drop the wrapper's inline transform BEFORE refreshing: any transform
+        // here is a containing block, which silently breaks ScrollTrigger's
+        // position:fixed pinning (the pinned section scrolls away and leaves
+        // the pin-spacer as blank space).
+        clearWrapper(m);
         ScrollTrigger.refresh();
       },
     });
@@ -107,7 +124,6 @@ export function TransitionProvider({
         0.15,
       );
     }
-    ScrollTrigger.refresh();
   }, [pathname]);
 
   return (

@@ -35,6 +35,10 @@ export function SelectedProjects() {
           start: "top top",
           end: () => `+=${distance()}`,
           pin: true,
+          // Pin by translating rather than position:fixed. Fixed pinning
+          // silently fails if any ancestor ever carries a transform (the page
+          // wrapper does during route transitions).
+          pinType: "transform",
           scrub: 0.8,
           anticipatePin: 1,
           invalidateOnRefresh: true,
