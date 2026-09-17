@@ -84,3 +84,7 @@
     position: static;
   }
 }
+
+@media (max-width: 600px) {
+  .title { font-size: 2.15rem; max-width: 15ch; } .big { font-size: 1.2rem; } .detail { grid-template-columns: 5.5rem minmax(0, 1fr); gap: 0.65rem; }
+}

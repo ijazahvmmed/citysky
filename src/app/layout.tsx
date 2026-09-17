@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Instrument_Serif, Inter } from "next/font/google";
+import { DM_Sans } from "next/font/google";
 import "./globals.css";
 import { site } from "@/lib/site";
 import { NavThemeProvider } from "@/components/layout/NavTheme";
@@ -7,18 +7,11 @@ import { TransitionProvider } from "@/components/layout/Transition";
 import { Nav } from "@/components/layout/Nav";
 import { Footer } from "@/components/layout/Footer";
 import { Cursor } from "@/components/layout/Cursor";
+import { FloatingContact } from "@/components/layout/FloatingContact";
 
-const instrument = Instrument_Serif({
-  weight: "400",
-  style: ["normal", "italic"],
+const dmSans = DM_Sans({
   subsets: ["latin"],
-  variable: "--font-instrument",
-  display: "swap",
-});
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-dm-sans",
   display: "swap",
 });
 
@@ -49,7 +42,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${instrument.variable} ${inter.variable}`}
+      className={dmSans.variable}
       suppressHydrationWarning
     >
       <head>
@@ -70,6 +63,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           </TransitionProvider>
         </NavThemeProvider>
         <Cursor />
+        <FloatingContact />
       </body>
     </html>
   );

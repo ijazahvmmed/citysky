@@ -3,9 +3,8 @@
 import Image from "next/image";
 import { useRef } from "react";
 import { gsap, DESKTOP, MOTION_OK } from "@/lib/gsap";
-import { featuredProjects, projectEra } from "@/lib/data/projects";
+import { featuredProjects } from "@/lib/data/projects";
 import { imageBlur, imageSrc } from "@/lib/images";
-import { cx } from "@/lib/cx";
 import { TransitionLink } from "@/components/layout/TransitionLink";
 import { ArrowLink } from "@/components/ui/ArrowLink";
 import { RevealText } from "@/components/motion/RevealText";
@@ -35,10 +34,9 @@ export function SelectedProjects() {
           start: "top top",
           end: () => `+=${distance()}`,
           pin: true,
-          // Pin by translating rather than position:fixed. Fixed pinning
-          // silently fails if any ancestor ever carries a transform (the page
-          // wrapper does during route transitions).
-          pinType: "transform",
+          // Keep the section anchored by the browser while only the track
+          // animates. Transform pinning can lag behind compositor scrolling.
+          pinType: "fixed",
           scrub: 0.8,
           anticipatePin: 1,
           invalidateOnRefresh: true,
@@ -69,7 +67,7 @@ export function SelectedProjects() {
       </div>
 
       <div ref={track} className={styles.track} data-cursor="Scroll">
-        {featuredProjects.map((p, i) => (
+        {featuredProjects.map((p, index) => (
           <TransitionLink
             key={p.slug}
             href={`/projects/${p.slug}`}
@@ -77,6 +75,7 @@ export function SelectedProjects() {
             data-cursor="View"
           >
             <div className={styles.media}>
+              {p.soldOut && <span className={styles.soldOut}>Sold out</span>}
               <Image
                 src={imageSrc(p.cover, 1600)}
                 alt={p.cover.alt}
@@ -88,28 +87,12 @@ export function SelectedProjects() {
               />
             </div>
             <div className={styles.body}>
-              <div className={styles.row}>
-                <span className={styles.index}>0{i + 1}</span>
-                <span
-                  className={cx("badge", `badge--${p.status.toLowerCase()}`)}
-                >
-                  {p.status}
-                </span>
+              <div className={styles.projectHeading}>
+                <span className={styles.index}>{String(index + 1).padStart(2, "0")}</span>
+                <span className={styles.projectStatus}>{p.status}</span>
               </div>
-              <div className={styles.row}>
-                <h3 className={styles.name}>{p.name}</h3>
-                <p className={styles.meta}>
-                  <span>{p.location}</span>
-                  <span className={styles.sep} aria-hidden>
-                    ·
-                  </span>
-                  <span>{projectEra(p)}</span>
-                  <span className={styles.sep} aria-hidden>
-                    ·
-                  </span>
-                  <span>{p.configuration}</span>
-                </p>
-              </div>
+              <h3 className={styles.name}>{p.name}</h3>
+              <p className={styles.meta}>{p.area}, Kerala</p>
             </div>
           </TransitionLink>
         ))}

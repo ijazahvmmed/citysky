@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { img } from "@/lib/images";
-import { team } from "@/lib/data/team";
+
 import { RevealImage } from "@/components/motion/RevealImage";
 import { RevealText } from "@/components/motion/RevealText";
 import { ContactCTA } from "@/components/sections/ContactCTA";
@@ -9,7 +9,7 @@ import styles from "./About.module.css";
 export const metadata: Metadata = {
   title: "Studio",
   description:
-    "Citysky Builders is a small design-and-build practice in Kochi. The story, the way of working, and the people behind the homes.",
+    "Citysky Builders is a small design-and-build practice in Kochi. The story and the way we design and build homes.",
 };
 
 const portrait = img(
@@ -179,39 +179,6 @@ export default function AboutPage() {
             Lakshmi Nair, interiors
           </cite>
         </blockquote>
-      </section>
-
-      <section
-        className={`section ${styles.team}`}
-        aria-labelledby="team-heading"
-      >
-        <div className="container">
-          <div className={styles.teamHead}>
-            <p className="eyebrow">The people</p>
-            <RevealText
-              as="h2"
-              className={`h-section ${styles.teamTitle}`}
-              id="team-heading"
-            >
-              Twelve of us, on site most days.
-            </RevealText>
-          </div>
-          <ul className={styles.teamGrid}>
-            {team.map((p) => (
-              <li key={p.name} className={styles.person}>
-                <RevealImage
-                  image={p.portrait}
-                  className={styles.portrait}
-                  sizes="(min-width: 900px) 30vw, 50vw"
-                  width={900}
-                  position="50% 22%"
-                />
-                <p className={styles.personName}>{p.name}</p>
-                <p className="label muted">{p.role}</p>
-              </li>
-            ))}
-          </ul>
-        </div>
       </section>
 
       <ContactCTA

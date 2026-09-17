@@ -241,3 +241,53 @@
     padding-top: 0;
   }
 }
+
+@media (max-width: 600px) {
+  .name, .tileFull .name { font-size: 1.5rem; } .meta { flex-wrap: wrap; gap: 0.5rem 1rem; }
+}
+
+/* Project information follows the same order on every card. */
+.tile { gap: 0; border: 1px solid var(--border); background: #fff; border-radius: 12px; overflow: hidden; }
+.body { display: flex; flex-direction: column; align-items: stretch; gap: 0; padding: clamp(1.2rem, 2.5vw, 2rem); width: 100%; }
+.cardStatus { display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+.statusChip, .soldChip, .availableChip { display: inline-flex; align-items: center; gap: 0.4rem; border-radius: 100px; padding: 0.3rem 0.65rem; font-size: 0.65rem; font-weight: 500; line-height: 1.4; letter-spacing: 0; }
+.statusChip span { font-size: 0.45rem; }
+.upcoming { background: #edf1f6; color: #4c627c; }
+.ongoing { background: #f7f0e4; color: #806737; }
+.completed { background: #edf3ee; color: #4b6b56; }
+.soldChip { color: #9b4d46; background: #faeeec; border: 1px solid #efdbd7; }
+.availableChip { color: #58665f; background: #f5f6f3; }
+.cardHeading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.name, .tileFull .name { font-size: clamp(1.4rem, 2.4vw, 2rem); font-weight: 600; letter-spacing: -0.045em; margin-bottom: 0; line-height: 1.15; }
+.cardArrow { display: grid; place-items: center; flex: none; width: 34px; height: 34px; border: 1px solid var(--border); border-radius: 50%; }
+.cardArrow svg { width: 14px; height: 14px; }
+.cardLocation { font-size: 0.8rem; color: #606760; margin-top: 0.4rem; }
+.cardSummary { font-size: 0.85rem; color: #747972; margin-top: 0.85rem; max-width: 65ch; line-height: 1.6; }
+.facts { display: grid; grid-template-columns: 1.2fr 1fr; gap: 1rem; margin-top: 1.2rem; padding-block: 1rem; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.facts dt { font-size: 0.625rem; text-transform: uppercase; letter-spacing: 0.08em; color: #7b817a; margin-bottom: 0.25rem; }
+.facts dd { font-size: 0.8rem; font-weight: 500; letter-spacing: -0.02em; line-height: 1.5; }
+.cardFoot { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-top: 1rem; }
+.cardPrice { font-size: 0.75rem; color: #697067; }
+.cardPrice strong { font-size: 0.95rem; font-weight: 600; color: #273c32; }
+.soldNote { font-size: 0.75rem; color: #9b4d46; }
+.detailsLink { font-size: 0.75rem; font-weight: 500; white-space: nowrap; }
+.detailsLink span { margin-left: 0.4rem; }
+@media (max-width: 600px) {
+  .body { padding: 1.1rem; }
+  .name, .tileFull .name { font-size: 1.35rem; }
+  .cardSummary { font-size: 0.8rem; }
+  .cardLocation { font-size: 0.75rem; }
+  .facts dd { font-size: 0.75rem; }
+  .imageHalf { aspect-ratio: 16 / 10; }
+}
+
+/* Consistent catalogue grid rather than alternating editorial tiles. */
+.grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem; align-items: stretch; }
+.tile { grid-column: auto; margin-top: 0; min-width: 0; }
+.cardImage { aspect-ratio: 16 / 10; }
+.body { flex: 1; padding: 1.25rem; }
+.name { font-size: 1.35rem; }
+.cardSummary { flex: 1; }
+.cardFoot { margin-top: auto; padding-top: 1rem; }
+@media (min-width: 601px) and (max-width: 1023px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 600px) { .grid { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; } }

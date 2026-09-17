@@ -134,3 +134,5 @@
     grid-column: 1 / -1;
   }
 }
+
+@media (max-width: 600px) { .title { font-size: 2.15rem; } .p { font-size: 0.9375rem; } .h2 { font-size: 1.5rem; } .quoteText, .nextLink { font-size: 1.35rem; } }

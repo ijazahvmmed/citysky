@@ -14,8 +14,8 @@
   --border-strong: rgba(20, 20, 20, 0.2);
   --border-inverse: rgba(250, 250, 248, 0.14);
 
-  --font-display: var(--font-instrument), "Playfair Display", Georgia, serif;
-  --font-body: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI",
+  --font-display: var(--font-dm-sans), "Segoe UI", sans-serif;
+  --font-body: var(--font-dm-sans), -apple-system, BlinkMacSystemFont, "Segoe UI",
     sans-serif;
 
   --max-width: 1440px;
@@ -61,6 +61,7 @@ body {
   font-size: var(--fs-body);
   line-height: 1.7;
   font-weight: 400;
+  letter-spacing: -0.02em;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -547,3 +548,22 @@ a:hover > .u-line {
     will-change: auto;
   }
 }
+
+/* Compact mobile type, retaining readable form fields and touch targets. */
+@media (max-width: 600px) {
+  :root {
+    --fs-hero: clamp(2.15rem, 8.5vw, 3rem);
+    --fs-section: clamp(1.65rem, 6.5vw, 2.2rem);
+    --fs-lede: 1.2rem;
+    --fs-sub: 1.1rem;
+    --fs-body: 0.9375rem;
+    --fs-small: 0.8125rem;
+    --fs-label: 0.6875rem;
+  }
+
+  body { line-height: 1.6; }
+  main h2 { text-wrap: balance; }
+  input, select, textarea { font-size: 1rem; }
+}
+
+h1, h2, h3, h4 { letter-spacing: -0.045em; }

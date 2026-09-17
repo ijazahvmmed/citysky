@@ -70,7 +70,7 @@ export function TransitionProvider({
       const tl = gsap.timeline({ onComplete: () => router.push(href) });
       tl.to(
         page.current,
-        { opacity: 0, y: -24, duration: 0.35, ease: "power2.in" },
+        { opacity: 0, duration: 0.35, ease: "power2.in" },
         0,
       );
       tl.fromTo(
@@ -100,7 +100,7 @@ export function TransitionProvider({
       return;
     }
     pending.current = null;
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: "instant" });
 
     const tl = gsap.timeline({
       onComplete: () => {
@@ -114,7 +114,9 @@ export function TransitionProvider({
         ScrollTrigger.refresh();
       },
     });
-    tl.set(m, { opacity: 1, y: 0 });
+    // A transformed page wrapper becomes the containing block for fixed
+    // descendants, so keep the wrapper fade-only throughout the transition.
+    tl.set(m, { opacity: 1 });
     tl.to(p, { yPercent: -100, duration: 0.4, ease: "power3.inOut" }, 0.05);
     const items = m.querySelectorAll<HTMLElement>("[data-enter]");
     if (items.length) {

@@ -1,112 +1,250 @@
 .hero {
   position: relative;
+  isolation: isolate;
   height: 100svh;
   min-height: 640px;
   overflow: hidden;
-  background: var(--bg-dark);
-  color: var(--text-inverse);
+  background: #cad7e9;
+  color: #080a08;
 }
 
-.media {
+.scene {
   position: absolute;
-  top: -80px;
-  left: 0;
-  right: 0;
   bottom: 0;
-  will-change: transform;
-}
-
-.shade {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(to bottom, rgba(20, 20, 20, 0.28), transparent 22%),
-    linear-gradient(to top, rgba(20, 20, 20, 0.62) 0%, rgba(20, 20, 20, 0.2) 38%, transparent 68%);
+  left: 50%;
+  width: max(100%, 180svh);
+  aspect-ratio: 9 / 4;
+  transform: translateX(-50%);
   pointer-events: none;
 }
 
-.content {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: clamp(3rem, 9vh, 6.5rem);
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+.image {
+  object-fit: cover;
 }
 
-.eyebrow {
-  color: rgba(250, 250, 248, 0.82);
+/* Extend the actual top edge of the photograph, preserving its sky colours
+   and horizontal alignment instead of fading into an unrelated solid fill. */
+.scene::before {
+  content: "";
+  position: absolute;
+  bottom: calc(100% - 1px);
+  width: 100%;
+  height: 100svh;
+  background-image: url("/images/hero-home-clean-roof.webp");
+  background-size: 100% 100000%;
+  background-position: center top;
+}
+
+.foreground {
+  z-index: 2;
+  clip-path: polygon(37% 100%, 37% 72%, 38.5% 72%, 38.5% 54.5%, 46.6% 54%, 46.6% 52.5%, 52% 52%, 52% 50.5%, 65% 50.5%, 65% 52.5%, 65.8% 52.5%, 65.8% 100%);
+}
+
+.foreground::before {
+  content: none;
+}
+
+
+.notes {
+  position: absolute;
+  z-index: 1;
+  top: max(7rem, 15%);
+  inset-inline: 2.5%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  font-size: clamp(0.65rem, 0.85vw, 0.875rem);
+  line-height: 1.25;
+  letter-spacing: -0.025em;
+}
+
+.notes p:nth-child(2) {
+  justify-self: center;
+}
+
+.notes p:last-child {
+  text-align: right;
 }
 
 .title {
-  max-width: 11ch;
-  text-wrap: balance;
+  position: absolute;
+  z-index: 1;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-body);
+  font-size: 26vw;
+  font-weight: 500;
+  color: #252b29;
+  line-height: 0.95;
+  letter-spacing: -0.085em;
+  padding-right: 0.085em;
+  padding-bottom: 0.15em;
+  white-space: nowrap;
 }
 
-.scroll {
+.shade {
+  display: none;
+}
+
+.footer {
   position: absolute;
-  right: var(--gutter);
-  bottom: clamp(3rem, 9vh, 6.5rem);
+  z-index: 4;
+  inset-inline: 2.5%;
+  bottom: 1.5rem;
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1.5rem;
+  color: #fff;
+}
+
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.pills a {
+  display: inline-flex;
   align-items: center;
-  gap: 0.75rem;
-  opacity: 0.85;
+  gap: 0.8rem;
+  min-height: 44px;
+  padding: 0.5rem 1.25rem;
+  border: 1px solid rgb(255 255 255 / 30%);
+  border-radius: 100px;
+  background: rgb(12 24 17 / 45%);
+  font-size: 0.75rem;
+  line-height: 1.2;
+  transition: background-color 180ms ease, color 180ms ease;
 }
 
-.scrollLabel {
-  font-size: 0.625rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  writing-mode: vertical-rl;
+.pills a.primary,
+.pills a:hover {
+  background: #fafaf8;
+  border-color: #fafaf8;
+  color: #141414;
 }
 
-.scrollLine {
-  width: 1px;
-  height: 56px;
-  background: rgba(250, 250, 248, 0.35);
-  position: relative;
-  overflow: hidden;
+.pills a:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 4px;
 }
 
-.scrollLine::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background: var(--text-inverse);
-  transform-origin: top;
-  animation: scrollHint 2.2s var(--ease-inout) infinite;
+.location {
+  font-size: 0.7rem;
+  line-height: 1.5;
+  text-align: right;
 }
 
-@keyframes scrollHint {
-  0% {
-    transform: scaleY(0);
-    transform-origin: top;
+.location span {
+  opacity: 0.75;
+}
+
+@media (min-width: 601px) {
+  /* Match the panoramic asset without stretching the completed home. */
+  .scene {
+    top: auto;
+    bottom: 0;
+    width: max(100%, 225svh);
+    aspect-ratio: 9 / 4;
   }
-  45% {
-    transform: scaleY(1);
-    transform-origin: top;
+
+  .notes {
+    top: max(6rem, 8%);
+    inset-inline: 12%;
   }
-  55% {
-    transform: scaleY(1);
-    transform-origin: bottom;
-  }
-  100% {
-    transform: scaleY(0);
-    transform-origin: bottom;
+
+  .title {
+    top: max(8rem, 16%);
+    font-size: min(26vw, 34svh);
+    transform: translateX(-50%);
   }
 }
 
-@media (max-width: 899px) {
-  .scroll {
+@media (max-width: 600px) {
+  .scene {
+    transform: translateX(-51.5%);
+  }
+
+  .hero {
+    min-height: 620px;
+  }
+
+  .notes {
+    inset-inline: 1.25rem;
+    top: 18%;
+    grid-template-columns: 1fr 1fr;
+    font-size: 0.7rem;
+  }
+
+  .notes p:nth-child(2) {
     display: none;
   }
 
-  .content {
-    bottom: 3rem;
+  .title {
+    top: 48%;
+    font-size: 26vw;
   }
+
+  .footer {
+    inset-inline: 1.25rem;
+    bottom: 1.25rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .pills {
+    gap: 0.375rem;
+  }
+
+  .pills a {
+    padding-inline: 0.9rem;
+    font-size: 0.6875rem;
+  }
+
+  .location {
+    text-align: left;
+  }
+}
+
+@media (max-width: 600px) {
+  .pills { flex-wrap: nowrap; gap: 0.3rem; } .pills a { padding-inline: 0.55rem; font-size: 0.625rem; } .footer { padding-right: 0; padding-bottom: 0.5rem; } .location { max-width: calc(100% - 7rem); }
+}
+
+.heroActions {
+  position: absolute;
+  z-index: 4;
+  top: 43%;
+  left: 5%;
+  display: grid;
+  grid-template-columns: 1fr 1.25fr;
+  width: min(300px, 40vw);
+  border: 1px solid rgb(255 255 255 / 85%);
+  border-radius: 0;
+}
+.heroActions a { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.1rem; padding: 0.35rem 0.5rem; min-height: 48px; text-align: center; transition: background 180ms; }
+.heroActions span { font-size: 0.5625rem; color: #526b80; letter-spacing: 0.07em; line-height: 1.3; }
+.heroActions strong { font-size: 0.8125rem; font-weight: 600; letter-spacing: -0.02em; line-height: 1.3; color: #345675; }
+.priceAction { background: rgb(250 252 253 / 85%); }
+.exploreAction { background: transparent; border-left: 1px solid rgb(255 255 255 / 85%); }
+.heroActions a:hover { background: #f8fafb; }
+.heroActions a:focus-visible { outline: 2px solid #254659; outline-offset: -3px; }
+@media (max-width: 600px) {
+  .heroActions { top: 29%; left: 50%; transform: translateX(-50%); width: min(280px, calc(100% - 3rem)); }
+  .heroActions a { min-height: 44px; }
+}
+
+/* Keep the image composition independent of the mobile navigation below it. */
+.hero { height: auto; min-height: 0; }
+.visual { position: relative; height: 100svh; min-height: 640px; overflow: hidden; isolation: isolate; }
+.visual::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to bottom, rgb(250 250 248 / 96%) 0%, rgb(250 250 248 / 72%) 25%, rgb(250 250 248 / 32%) 48%, transparent 64%); }
+@media (max-width: 600px) {
+  .visual { min-height: 620px; }
+  .footer { position: static; padding: 0.75rem 1.25rem 1.5rem; background: var(--bg-primary); color: var(--text-primary); gap: 1rem; }
+  .pills { width: 100%; justify-content: center; gap: 0.5rem; }
+  .pills a { background: transparent; color: var(--text-primary); border-color: var(--border-strong); padding-inline: 0.9rem; font-size: 0.6875rem; }
+  .pills a.primary { background: var(--text-primary); color: var(--bg-primary); border-color: var(--text-primary); }
+  .pills a:focus-visible { outline-color: var(--text-primary); }
+  .location { width: 100%; max-width: none; text-align: center; font-size: 0.625rem; }
 }

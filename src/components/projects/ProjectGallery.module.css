@@ -108,3 +108,5 @@
     margin-left: auto;
   }
 }
+
+@media (max-width: 600px) { .pinnedCaption { font-size: 1.25rem; } }

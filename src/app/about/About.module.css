@@ -258,3 +258,7 @@
     margin-top: 2.5rem;
   }
 }
+
+@media (max-width: 600px) {
+  .quoteText { font-size: 1.85rem; max-width: 22ch; } .quoteTextSmall { font-size: 1.45rem; max-width: 24ch; } .valueTitle { font-size: 1.45rem; }
+}

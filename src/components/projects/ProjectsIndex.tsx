@@ -5,8 +5,6 @@ import { gsap, Flip, ScrollTrigger, prefersReducedMotion } from "@/lib/gsap";
 import {
   projects,
   statusFilters,
-  areaFilters,
-  type Area,
   type ProjectStatus,
 } from "@/lib/data/projects";
 import { cx } from "@/lib/cx";
@@ -17,21 +15,16 @@ import { Arrow } from "@/components/ui/Arrow";
 import styles from "./ProjectsIndex.module.css";
 
 type StatusFilter = "All" | ProjectStatus;
-type AreaFilter = "All" | Area;
 
 const statusOptions = statusFilters as readonly StatusFilter[];
-const areaOptions = areaFilters as readonly AreaFilter[];
 
 export function ProjectsIndex() {
   const [status, setStatus] = useState<StatusFilter>("All");
-  const [area, setArea] = useState<AreaFilter>("All");
   const grid = useRef<HTMLDivElement>(null);
   const flipState = useRef<Flip.FlipState | null>(null);
 
   const visible = projects.filter(
-    (p) =>
-      (status === "All" || p.status === status) &&
-      (area === "All" || p.area === area),
+    (p) => status === "All" || p.status === status,
   );
   const visibleSlugs = new Set(visible.map((p) => p.slug));
 
@@ -60,12 +53,11 @@ export function ProjectsIndex() {
       onLeave: (els) => gsap.to(els, { opacity: 0, duration: 0.3 }),
       onComplete: () => ScrollTrigger.refresh(),
     });
-  }, [status, area]);
+  }, [status]);
 
   const reset = () => {
     capture();
     setStatus("All");
-    setArea("All");
   };
 
   return (
@@ -84,7 +76,7 @@ export function ProjectsIndex() {
           </RevealText>
           <p className={`body muted ${styles.lead}`} data-enter>
             Six projects over ten years, from a pair of houses on eleven cents
-            to fourteen homes around a courtyard. Filter by status or by place.
+            to fourteen homes around a courtyard. Filter by build status.
           </p>
         </header>
 
@@ -94,7 +86,7 @@ export function ProjectsIndex() {
             role="group"
             aria-label="Filter by status"
           >
-            <span className={`label muted ${styles.filterLabel}`}>Status</span>
+            <span className={`label muted ${styles.filterLabel}`}>Build status</span>
             {statusOptions.map((o) => (
               <button
                 key={o}
@@ -110,27 +102,6 @@ export function ProjectsIndex() {
               </button>
             ))}
           </div>
-          <div
-            className={styles.filterGroup}
-            role="group"
-            aria-label="Filter by location"
-          >
-            <span className={`label muted ${styles.filterLabel}`}>Place</span>
-            {areaOptions.map((o) => (
-              <button
-                key={o}
-                type="button"
-                className={cx(styles.filter, area === o && styles.filterOn)}
-                aria-pressed={area === o}
-                onClick={() => {
-                  capture();
-                  setArea(o);
-                }}
-              >
-                {o}
-              </button>
-            ))}
-          </div>
           <p className={`label muted ${styles.count}`} aria-live="polite">
             {visible.length} of {projects.length}
           </p>
@@ -139,18 +110,11 @@ export function ProjectsIndex() {
         <div ref={grid} className={styles.grid}>
           {projects.map((p) => {
             const isVisible = visibleSlugs.has(p.slug);
-            const index = visible.findIndex((v) => v.slug === p.slug);
-            const full = index % 3 === 0;
-            const offset = index % 3 === 2;
             return (
               <TransitionLink
                 key={p.slug}
                 href={`/projects/${p.slug}`}
-                className={cx(
-                  styles.tile,
-                  full ? styles.tileFull : styles.tileHalf,
-                  offset && styles.tileOffset,
-                )}
+                className={styles.tile}
                 data-tile
                 data-flip-id={p.slug}
                 data-cursor="View"
@@ -159,38 +123,34 @@ export function ProjectsIndex() {
                 <div className={styles.media}>
                   <RevealImage
                     image={p.cover}
-                    className={cx(
-                      styles.image,
-                      full ? styles.imageFull : styles.imageHalf,
-                    )}
-                    sizes={full ? "100vw" : "(min-width: 900px) 50vw, 100vw"}
-                    parallax={full ? 50 : 0}
-                    width={full ? 2400 : 1400}
+                    className={cx(styles.image, styles.cardImage)}
+                    sizes="(min-width: 1024px) 33vw, (min-width: 601px) 50vw, 100vw"
+                    parallax={0}
+                    width={1000}
                   />
                   <span className={styles.view}>
                     View project <Arrow className={styles.viewArrow} />
                   </span>
                 </div>
                 <div className={styles.body}>
-                  <div>
-                    <h2 className={styles.name}>{p.name}</h2>
-                    <p className={`small muted`}>{p.summary}</p>
+                  <div className={styles.cardStatus}>
+                    <span className={cx(styles.statusChip, styles[p.status.toLowerCase()])}><span aria-hidden="true">●</span> {p.status}</span>
+                    {p.soldOut && <span className={styles.soldChip}>Sold out</span>}
+                    {!p.soldOut && <span className={styles.availableChip}>Enquiries open</span>}
                   </div>
-                  <div className={styles.meta}>
-                    <span
-                      className={cx(
-                        "badge",
-                        `badge--${p.status.toLowerCase()}`,
-                      )}
-                    >
-                      {p.status}
-                    </span>
-                    {p.year && (
-                      <span className="small muted">{p.year}</span>
-                    )}
-                    <span className="small muted">{p.location}</span>
-                    <span className="small muted">{p.configuration}</span>
-                    {p.soldOut && <span className="small muted">Sold out</span>}
+                  <div className={styles.cardHeading}>
+                    <h2 className={styles.name}>{p.name}</h2>
+                    <span className={styles.cardArrow} aria-hidden="true"><Arrow /></span>
+                  </div>
+                  <p className={styles.cardLocation}>{p.location}</p>
+                  <p className={styles.cardSummary}>{p.summary}</p>
+                  <dl className={styles.facts}>
+                    <div><dt>Homes</dt><dd>{p.unitTypes}</dd></div>
+                    <div><dt>Built-up area</dt><dd>{p.builtUp}</dd></div>
+                  </dl>
+                  <div className={styles.cardFoot}>
+                    {p.soldOut ? <span className={styles.soldNote}>All homes sold</span> : <span className={styles.cardPrice}>From <strong>₹{p.basePrice.min} lakhs</strong></span>}
+                    <span className={styles.detailsLink}>View project <span aria-hidden="true">↗</span></span>
                   </div>
                 </div>
               </TransitionLink>
@@ -199,7 +159,7 @@ export function ProjectsIndex() {
 
           {visible.length === 0 && (
             <div className={styles.empty}>
-              <p className="lede">Nothing matches that combination yet.</p>
+              <p className="lede">No projects with that build status yet.</p>
               <button type="button" className="arrow-link" onClick={reset}>
                 Show all projects <Arrow />
               </button>
