@@ -1,12 +1,12 @@
 .numbers {
-  padding-top: clamp(4rem, 8vw, 8rem);
+  padding-top: 0;
 }
 
 .row {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   column-gap: clamp(1rem, 2.5vw, 2.5rem);
-  row-gap: 3rem;
+  row-gap: clamp(1.75rem, 4vw, 3rem);
 }
 
 .stat {

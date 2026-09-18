@@ -1,8 +1,7 @@
 .section {
   position: relative;
   overflow: hidden;
-  padding-top: clamp(4rem, 6vw, 6rem);
-  padding-bottom: clamp(4rem, 6vw, 6rem);
+  padding-block: var(--space-section);
   border-top: 1px solid var(--border);
 }
 
@@ -138,7 +137,7 @@
 @media (max-width: 1023px), (prefers-reduced-motion: reduce) {
   .track {
     flex-direction: column;
-    gap: 4rem;
+    gap: clamp(2.25rem, 5vw, 3.5rem);
     will-change: auto;
   }
 
@@ -148,8 +147,8 @@
   }
 
   .card:nth-child(even) {
-    width: 82%;
-    margin-left: auto;
+    width: 100%;
+    margin-left: 0;
   }
 
   .end {

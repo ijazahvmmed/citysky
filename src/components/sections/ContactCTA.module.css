@@ -1,11 +1,12 @@
 .cta {
-  padding-block: clamp(7rem, 14vw, 14rem);
+  padding-block: var(--space-section);
+  border-top: 1px solid var(--border);
 }
 
 .headline {
-  margin-top: 2rem;
+  margin-top: 1.25rem;
   max-width: 14ch;
-  font-size: clamp(2.75rem, 7vw, 6.5rem);
+  font-size: clamp(2.25rem, 6vw, 5.5rem);
   text-wrap: balance;
 }
 
@@ -13,9 +14,9 @@
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
   column-gap: clamp(1rem, 2.5vw, 2.5rem);
-  row-gap: 2.5rem;
-  margin-top: clamp(3rem, 5vw, 5rem);
-  padding-top: 2.5rem;
+  row-gap: 2rem;
+  margin-top: clamp(2rem, 4vw, 4rem);
+  padding-top: 2rem;
   border-top: 1px solid var(--border);
 }
 
