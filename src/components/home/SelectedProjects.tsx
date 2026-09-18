@@ -53,17 +53,20 @@ export function SelectedProjects() {
       aria-labelledby="projects-heading"
     >
       <div className={`container ${styles.head}`}>
-        <div>
+        <div className={styles.titleGroup}>
           <p className="eyebrow">Selected projects</p>
           <RevealText
             as="h2"
             className={`h-section ${styles.title}`}
             id="projects-heading"
           >
-            Ten years of building in Kochi.
+            <span>Ten years of</span>
+            <span className={styles.titleOffset}>building in Kochi.</span>
           </RevealText>
         </div>
-        <ArrowLink href="/projects">All projects</ArrowLink>
+        <div className={styles.allLink}>
+          <ArrowLink href="/projects">All projects</ArrowLink>
+        </div>
       </div>
 
       <div ref={track} className={styles.track} data-cursor="Scroll">

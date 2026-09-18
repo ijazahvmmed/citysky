@@ -241,10 +241,16 @@
 .visual::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to bottom, rgb(250 250 248 / 96%) 0%, rgb(250 250 248 / 72%) 25%, rgb(250 250 248 / 32%) 48%, transparent 64%); }
 @media (max-width: 600px) {
   .visual { min-height: 620px; }
-  .footer { position: static; padding: 0.75rem 1.25rem 1.5rem; background: var(--bg-primary); color: var(--text-primary); gap: 1rem; }
+  .footer {
+    position: static;
+    padding: clamp(2.25rem, 5vh, 3.25rem) 1.25rem clamp(2.25rem, 5vh, 3.25rem);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    gap: 1.25rem;
+  }
   .pills { width: 100%; justify-content: center; gap: 0.5rem; }
   .pills a { background: transparent; color: var(--text-primary); border-color: var(--border-strong); padding-inline: 0.9rem; font-size: 0.6875rem; }
   .pills a.primary { background: var(--text-primary); color: var(--bg-primary); border-color: var(--text-primary); }
   .pills a:focus-visible { outline-color: var(--text-primary); }
-  .location { width: 100%; max-width: none; text-align: center; font-size: 0.625rem; }
+  .location { width: 100%; max-width: none; text-align: center; font-size: 0.6875rem; line-height: 1.5; }
 }
