@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { site } from "@/lib/site";
 import { whatsappLink } from "@/lib/whatsapp";
 import { track } from "@/lib/analytics";
+import Image from "next/image";
 import { useNavTheme } from "./NavTheme";
 import { TransitionLink } from "./TransitionLink";
 import styles from "./Nav.module.css";
@@ -79,8 +80,14 @@ export function Nav() {
           className={styles.logo}
           aria-label="Citysky Builders, home"
         >
-          <span className={styles.wordmark}>Citysky</span>{" "}
-          <span className={styles.wordmarkSub}>Builders</span>
+          <Image
+            src="/images/logo.png"
+            alt="Citysky Builders"
+            width={154}
+            height={32}
+            className={styles.logoImg}
+            priority
+          />
         </TransitionLink>
 
         <nav className={styles.links} aria-label="Primary">
