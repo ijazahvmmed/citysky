@@ -1,5 +1,7 @@
 .compare {
   scroll-margin-top: 4rem;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .head {
@@ -12,11 +14,15 @@
 .scroller {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+  width: 100%;
 }
 
 /* Right-edge fade cues that the table scrolls on narrow screens. */
 .wrap {
   position: relative;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .wrap::after {
