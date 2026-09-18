@@ -44,7 +44,6 @@
   content: none;
 }
 
-
 .notes {
   position: absolute;
   z-index: 1;
@@ -74,7 +73,19 @@
   font-family: var(--font-body);
   font-size: 26vw;
   font-weight: 500;
-  color: #252b29;
+  color: #242c1a;
+  background: linear-gradient(
+    175deg,
+    #4a573b 0%,
+    #2f3922 34%,
+    #1f2715 58%,
+    #364227 78%,
+    #131a0d 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 6px 24px rgba(18, 26, 12, 0.22));
   line-height: 0.95;
   letter-spacing: -0.085em;
   padding-right: 0.085em;
