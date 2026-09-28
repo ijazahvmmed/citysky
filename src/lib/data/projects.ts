@@ -445,59 +445,28 @@ export const projects: Project[] = [
     soldOut: false,
     summary:
       "Eight villas along Mirzad Road, built in phases. Two are finished and lived in; six follow.",
-    cover: img(
-      "1600585154363-67eb9e2e2099",
-      "Mirzad Road: dark-clad villa under a large tree at dusk",
-    ),
-    portrait: img(
-      "1600585154084-4e5fe7c39198",
-      "Mirzad Road: villa elevation at night with lit windows",
-    ),
+    cover: img("/images/projects/mirzad-road/05-first-floor-lounge-furnished.webp", "Mirzad Road: First Floor Lounge Furnished"),
+    portrait: img("/images/projects/mirzad-road/01-ground-floor-living-furnished.webp", "Mirzad Road: Ground Floor Living Furnished"),
     overview: [
       "Mirzad Road runs along a slight ridge, which is unusual enough in this part of Kochi to be worth designing around. The land falls away to the south, so we set the villas along the high edge and let their gardens step down behind them.",
       "Each villa turns its back on the road and opens south into its own garden. A veranda runs the full width of that south face, deep enough to keep the monsoon off an open door and to be usable as a room for the four months when sitting outside is the only sensible thing to do. Upstairs, the bedrooms take the same orientation, with louvred shutters on the west so the evening breeze comes through without the evening sun.",
       "Two villas are complete and occupied. The remaining six are under construction and will be handed over in phases through 2026. Prices start at ₹70 Lakhs unfurnished, and all three levels of finish are available on the six still to come.",
     ],
     gallery: [
-      {
-        image: img(
-          "1600573472591-ee6b68d14c68",
-          "Living room with polished concrete floor opening to a veranda",
-        ),
-        caption:
-          "The veranda runs the full south face. In the monsoon it is the room the house actually lives in.",
-        layout: "full",
-      },
-      {
-        image: img(
-          "1600607687644-c7171b42498f",
-          "Bedroom with linen and garden view",
-        ),
-        layout: "half",
-      },
-      {
-        image: img(
-          "1600607686527-6fb886090705",
-          "Kitchen with white counters and oak joinery",
-        ),
-        layout: "half",
-      },
-      {
-        image: img(
-          "1600566753086-00f18fb6b3ea",
-          "Double-height living room with timber floor",
-        ),
-        caption:
-          "Stair halls are lit from above, so the centre of the plan never needs a lamp during the day.",
-        layout: "pinned",
-      },
-      {
-        image: img(
-          "1600573472592-401b489a3cdc",
-          "Villa elevation with courtyard and pool, late afternoon",
-        ),
-        layout: "full",
-      },
+      { image: img("/images/projects/mirzad-road/01-ground-floor-living-unfurnished.webp", "Mirzad Road: Ground Floor Living Unfurnished"), caption: "Ground Floor Living Unfurnished", layout: "half" },
+      { image: img("/images/projects/mirzad-road/01-ground-floor-living-furnished.webp", "Mirzad Road: Ground Floor Living Furnished"), caption: "Ground Floor Living Furnished", layout: "half" },
+      { image: img("/images/projects/mirzad-road/02-dining-area-unfurnished.webp", "Mirzad Road: Dining Area Unfurnished"), caption: "Dining Area Unfurnished", layout: "half" },
+      { image: img("/images/projects/mirzad-road/02-dining-area-furnished.webp", "Mirzad Road: Dining Area Furnished"), caption: "Dining Area Furnished", layout: "half" },
+      { image: img("/images/projects/mirzad-road/03-kitchen-unfurnished.webp", "Mirzad Road: Kitchen Unfurnished"), caption: "Kitchen Unfurnished", layout: "half" },
+      { image: img("/images/projects/mirzad-road/03-kitchen-furnished.webp", "Mirzad Road: Kitchen Furnished"), caption: "Kitchen Furnished", layout: "half" },
+      { image: img("/images/projects/mirzad-road/04-private-patio-unfurnished.webp", "Mirzad Road: Private Patio Unfurnished"), caption: "Private Patio Unfurnished", layout: "half" },
+      { image: img("/images/projects/mirzad-road/04-private-patio-furnished.webp", "Mirzad Road: Private Patio Furnished"), caption: "Private Patio Furnished", layout: "half" },
+      { image: img("/images/projects/mirzad-road/05-first-floor-lounge-unfurnished.webp", "Mirzad Road: First Floor Lounge Unfurnished"), caption: "First Floor Lounge Unfurnished", layout: "half" },
+      { image: img("/images/projects/mirzad-road/05-first-floor-lounge-furnished.webp", "Mirzad Road: First Floor Lounge Furnished"), caption: "First Floor Lounge Furnished", layout: "half" },
+      { image: img("/images/projects/mirzad-road/06-master-bedroom-unfurnished.webp", "Mirzad Road: Master Bedroom Unfurnished"), caption: "Master Bedroom Unfurnished", layout: "half" },
+      { image: img("/images/projects/mirzad-road/06-master-bedroom-furnished.webp", "Mirzad Road: Master Bedroom Furnished"), caption: "Master Bedroom Furnished", layout: "half" },
+      { image: img("/images/projects/mirzad-road/07-balcony-flex-room-unfurnished.webp", "Mirzad Road: Balcony Flex Room Unfurnished"), caption: "Balcony Flex Room Unfurnished", layout: "half" },
+      { image: img("/images/projects/mirzad-road/07-balcony-flex-room-furnished.webp", "Mirzad Road: Balcony Flex Room Furnished"), caption: "Balcony Flex Room Furnished", layout: "half" },
     ],
     floorPlans: { ground: villaGround, first: villaFirst },
     specs: defaultSpecs("villa"),
@@ -528,49 +497,20 @@ export const projects: Project[] = [
     soldOut: true,
     summary:
       "Four homes on a small infill plot, arranged so none of them looks into another.",
-    cover: img(
-      "1613490493576-7fde63acd811",
-      "1008: white rendered elevation with pool and planting",
-    ),
-    portrait: img(
-      "1600566752355-35792bedcfea",
-      "1008: bathroom with stone vanity and garden window",
-    ),
+    cover: img("/images/projects/1008/entrance.webp", "Gated entrance and front elevation at 1008"),
+    portrait: img("/images/projects/1008/front-elevation.webp", "Front elevation with decorative screens at 1008"),
     overview: [
       "Sixteen cents is not much land for four homes, and the temptation on a plot this size is to put up four identical boxes facing the same way. We spent most of the design time avoiding that.",
       "The four homes sit at slightly different angles, each one turned a few degrees off its neighbour so that no window looks directly into another. The gaps that opens up became small private courts, one per house, which pull light into the middle of plans that are otherwise quite deep. Two homes got a double-height living room; the other two traded that for a larger terrace upstairs.",
       "All four were handed over in 2022 and are lived in by families who, between them, have since planted the shared entrance far better than we drew it. The project is complete and sold out.",
     ],
     gallery: [
-      {
-        image: img(
-          "1600210491892-03d54c0aaf87",
-          "Living room with arched windows and timber floor",
-        ),
-        caption:
-          "Private courts pull daylight into the middle of each plan, where a deep infill house would otherwise go dark.",
-        layout: "full",
-      },
-      {
-        image: img("1600607688066-890987f18a86", "Bathroom with marble vanity"),
-        layout: "half",
-      },
-      {
-        image: img(
-          "1600607687920-4e2a09cf159d",
-          "Dining room with timber table beside the garden",
-        ),
-        layout: "half",
-      },
-      {
-        image: img(
-          "1600566753051-f0b89df2dd90",
-          "Bedroom with timber floor and floor-to-ceiling glazing",
-        ),
-        caption:
-          "Each home is turned a few degrees off its neighbour, so no bedroom window faces another.",
-        layout: "pinned",
-      },
+      { image: img("/images/projects/1008/street-view.webp", "Street view of 1008 with palms and boundary planting"), caption: "Street view of 1008 with palms and boundary planting", layout: "half" },
+      { image: img("/images/projects/1008/side-elevation.webp", "Side elevation of a 1008 home"), caption: "Side elevation of a 1008 home", layout: "half" },
+      { image: img("/images/projects/1008/construction-progress.webp", "1008 home during construction"), caption: "1008 home during construction", layout: "half" },
+      { image: img("/images/projects/1008/sunset-exterior.webp", "1008 exterior at sunset"), caption: "1008 exterior at sunset", layout: "half" },
+      { image: img("/images/projects/1008/front-elevation.webp", "Front elevation with decorative screens at 1008"), caption: "Front elevation with decorative screens at 1008", layout: "half" },
+      { image: img("/images/projects/1008/entrance.webp", "Gated entrance and front elevation at 1008"), caption: "Gated entrance and front elevation at 1008", layout: "half" },
     ],
     floorPlans: { ground: villaGround, first: villaFirst },
     specs: defaultSpecs("villa"),

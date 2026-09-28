@@ -30,19 +30,20 @@
   bottom: calc(100% - 1px);
   width: 100%;
   height: 100svh;
-  background-image: url("/images/hero-home-clean-roof.webp");
+  background-image: url("/images/hero-home-landscape.webp");
   background-size: 100% 100000%;
   background-position: center top;
 }
 
 .foreground {
   z-index: 2;
-  clip-path: polygon(37% 100%, 37% 72%, 38.5% 72%, 38.5% 54.5%, 46.6% 54%, 46.6% 52.5%, 52% 52%, 52% 50.5%, 65% 50.5%, 65% 52.5%, 65.8% 52.5%, 65.8% 100%);
+  clip-path: polygon(32.5% 100%, 32.5% 62.5%, 34% 62.5%, 34% 43.6%, 35.4% 43.6%, 35.4% 41.5%, 51.7% 41.5%, 51.7% 41.2%, 67.1% 41.2%, 67.1% 43.4%, 68.1% 43.4%, 68.1% 100%);
 }
 
 .foreground::before {
   content: none;
 }
+
 
 .notes {
   position: absolute;
@@ -73,19 +74,7 @@
   font-family: var(--font-body);
   font-size: 26vw;
   font-weight: 500;
-  color: #242c1a;
-  background: linear-gradient(
-    175deg,
-    #4a573b 0%,
-    #2f3922 34%,
-    #1f2715 58%,
-    #364227 78%,
-    #131a0d 100%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 6px 24px rgba(18, 26, 12, 0.22));
+  color: #252b29;
   line-height: 0.95;
   letter-spacing: -0.085em;
   padding-right: 0.085em;
@@ -152,12 +141,13 @@
 }
 
 @media (min-width: 601px) {
+
   /* Match the panoramic asset without stretching the completed home. */
   .scene {
-    top: auto;
-    bottom: 0;
-    width: max(100%, 225svh);
-    aspect-ratio: 9 / 4;
+    top: min(0px, calc((100svh - 55.814vw) / 2));
+    bottom: auto;
+    width: max(100%, 179.167svh);
+    aspect-ratio: 43 / 24;
   }
 
   .notes {
@@ -166,7 +156,7 @@
   }
 
   .title {
-    top: max(8rem, 16%);
+    top: max(7rem, 14%);
     font-size: min(26vw, 34svh);
     transform: translateX(-50%);
   }
@@ -174,7 +164,18 @@
 
 @media (max-width: 600px) {
   .scene {
-    transform: translateX(-51.5%);
+    width: max(100%, 74.667svh);
+    aspect-ratio: 56 / 75;
+    transform: translateX(-54%);
+    bottom: calc(-1 * clamp(36px, 6svh, 56px));
+  }
+
+  .scene::before {
+    background-image: url("/images/hero-home-portrait.webp");
+  }
+
+  .foreground {
+    clip-path: polygon(21.5% 100%, 21.5% 63.8%, 24.2% 63.8%, 24.2% 50%, 26.5% 50%, 26.5% 48.4%, 54.8% 48.4%, 54.8% 48.3%, 81.8% 48.3%, 81.8% 49.9%, 83.4% 49.9%, 83.4% 100%);
   }
 
   .hero {
@@ -183,7 +184,7 @@
 
   .notes {
     inset-inline: 1.25rem;
-    top: 18%;
+    top: 16%;
     grid-template-columns: 1fr 1fr;
     font-size: 0.7rem;
   }
@@ -193,7 +194,7 @@
   }
 
   .title {
-    top: 48%;
+    top: calc(35% + clamp(36px, 6svh, 56px));
     font-size: 26vw;
   }
 
@@ -220,13 +221,30 @@
 }
 
 @media (max-width: 600px) {
-  .pills { flex-wrap: nowrap; gap: 0.3rem; } .pills a { padding-inline: 0.55rem; font-size: 0.625rem; } .footer { padding-right: 0; padding-bottom: 0.5rem; } .location { max-width: calc(100% - 7rem); }
+  .pills {
+    flex-wrap: nowrap;
+    gap: 0.3rem;
+  }
+
+  .pills a {
+    padding-inline: 0.55rem;
+    font-size: 0.625rem;
+  }
+
+  .footer {
+    padding-right: 0;
+    padding-bottom: 0.5rem;
+  }
+
+  .location {
+    max-width: calc(100% - 7rem);
+  }
 }
 
 .heroActions {
   position: absolute;
   z-index: 4;
-  top: 43%;
+  top: 13%;
   left: 5%;
   display: grid;
   grid-template-columns: 1fr 1.25fr;
@@ -234,24 +252,94 @@
   border: 1px solid rgb(255 255 255 / 85%);
   border-radius: 0;
 }
-.heroActions a { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.1rem; padding: 0.35rem 0.5rem; min-height: 48px; text-align: center; transition: background 180ms; }
-.heroActions span { font-size: 0.5625rem; color: #526b80; letter-spacing: 0.07em; line-height: 1.3; }
-.heroActions strong { font-size: 0.8125rem; font-weight: 600; letter-spacing: -0.02em; line-height: 1.3; color: #345675; }
-.priceAction { background: rgb(250 252 253 / 85%); }
-.exploreAction { background: transparent; border-left: 1px solid rgb(255 255 255 / 85%); }
-.heroActions a:hover { background: #f8fafb; }
-.heroActions a:focus-visible { outline: 2px solid #254659; outline-offset: -3px; }
+
+.heroActions a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.1rem;
+  padding: 0.35rem 0.5rem;
+  min-height: 48px;
+  text-align: center;
+  transition: background 180ms;
+}
+
+.heroActions span {
+  font-size: 0.5625rem;
+  color: #526b80;
+  letter-spacing: 0.07em;
+  line-height: 1.3;
+}
+
+.heroActions strong {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+  color: #345675;
+}
+
+.priceAction {
+  background: rgb(250 252 253 / 85%);
+}
+
+.exploreAction {
+  background: transparent;
+  border-left: 1px solid rgb(255 255 255 / 85%);
+}
+
+.heroActions a:hover {
+  background: #f8fafb;
+}
+
+.heroActions a:focus-visible {
+  outline: 2px solid #254659;
+  outline-offset: -3px;
+}
+
 @media (max-width: 600px) {
-  .heroActions { top: 29%; left: 50%; transform: translateX(-50%); width: min(280px, calc(100% - 3rem)); }
-  .heroActions a { min-height: 44px; }
+  .heroActions {
+    /* Keep the buttons in place as the heading and home move down together. */
+    top: calc(35% - 72px);
+    height: 48px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(280px, calc(100% - 3rem));
+  }
+
+  .heroActions a {
+    min-height: 0;
+  }
 }
 
 /* Keep the image composition independent of the mobile navigation below it. */
-.hero { height: auto; min-height: 0; }
-.visual { position: relative; height: 100svh; min-height: 640px; overflow: hidden; isolation: isolate; }
-.visual::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to bottom, rgb(250 250 248 / 96%) 0%, rgb(250 250 248 / 72%) 25%, rgb(250 250 248 / 32%) 48%, transparent 64%); }
+.hero {
+  height: auto;
+  min-height: 0;
+}
+
+.visual {
+  position: relative;
+  height: 100svh;
+  min-height: 640px;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.visual::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(to bottom, rgb(250 250 248 / 96%) 0%, rgb(250 250 248 / 72%) 25%, rgb(250 250 248 / 32%) 48%, transparent 64%);
+}
+
 @media (max-width: 600px) {
-  .visual { min-height: 620px; }
+  .visual {
+    min-height: 620px;
+  }
+
   .footer {
     position: static;
     padding: clamp(2.25rem, 5vh, 3.25rem) 1.25rem clamp(2.25rem, 5vh, 3.25rem);
@@ -259,9 +347,36 @@
     color: var(--text-primary);
     gap: 1.25rem;
   }
-  .pills { width: 100%; justify-content: center; gap: 0.5rem; }
-  .pills a { background: transparent; color: var(--text-primary); border-color: var(--border-strong); padding-inline: 0.9rem; font-size: 0.6875rem; }
-  .pills a.primary { background: var(--text-primary); color: var(--bg-primary); border-color: var(--text-primary); }
-  .pills a:focus-visible { outline-color: var(--text-primary); }
-  .location { width: 100%; max-width: none; text-align: center; font-size: 0.6875rem; line-height: 1.5; }
+
+  .pills {
+    width: 100%;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .pills a {
+    background: transparent;
+    color: var(--text-primary);
+    border-color: var(--border-strong);
+    padding-inline: 0.9rem;
+    font-size: 0.6875rem;
+  }
+
+  .pills a.primary {
+    background: var(--text-primary);
+    color: var(--bg-primary);
+    border-color: var(--text-primary);
+  }
+
+  .pills a:focus-visible {
+    outline-color: var(--text-primary);
+  }
+
+  .location {
+    width: 100%;
+    max-width: none;
+    text-align: center;
+    font-size: 0.6875rem;
+    line-height: 1.5;
+  }
 }

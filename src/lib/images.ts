@@ -1,7 +1,7 @@
 import blurMap from "./data/blur.json";
 
 export interface ImageRef {
-  /** Unsplash photo id (placeholder library) */
+  /** Local public path or Unsplash photo id for remaining placeholders. */
   id: string;
   alt: string;
 }
@@ -9,9 +9,10 @@ export interface ImageRef {
 type BlurEntry = { blur: string; w: number; h: number };
 const blur = blurMap as Record<string, BlurEntry>;
 
-/** Remote placeholder source. Swap for local /images when real photography lands. */
+/** Serve supplied project photography locally, retaining remaining placeholders. */
 export function imageSrc(ref: ImageRef | string, width = 2000, quality = 80) {
   const id = typeof ref === "string" ? ref : ref.id;
+  if (id.startsWith("/")) return id;
   return `https://images.unsplash.com/photo-${id}?w=${width}&q=${quality}&auto=format&fit=crop`;
 }
 

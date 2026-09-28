@@ -11,46 +11,52 @@ export function Hero() {
   return (
     <section className={styles.hero} aria-labelledby="hero-title">
       <div className={styles.visual}>
-      <div className={styles.scene}>
-        <Image
-          src="/images/hero-home-clean-roof.webp"
-          unoptimized
-          alt="Completion visualization of the photographed white-and-turquoise home, with finished paving, landscaped gardens, and warm lighting"
-          fill
-          className={styles.image}
-          fetchPriority="high"
-          loading="eager"
-        />
-      </div>
+        <div className={styles.scene}>
+          <picture>
+            <source media="(max-width: 600px)" srcSet="/images/hero-home-portrait.webp" />
+          <Image
+            src="/images/hero-home-landscape.webp"
+            unoptimized
+            alt="Completion visualization of the photographed white-and-turquoise home, with finished paving, landscaped gardens, and warm lighting"
+            fill
+            className={styles.image}
+            fetchPriority="high"
+            loading="eager"
+          />
+          </picture>
+        </div>
 
-      <div className={styles.notes}>
-        <p>Dream big.<br />Live simply.</p>
-        <p>Thoughtful architecture.<br />Lasting belonging.</p>
-        <p>A place to slow down.<br />A home in Kochi.</p>
-      </div>
+        <div className={styles.notes}>
+          <p>Dream big.<br />Live simply.</p>
+          <p>Thoughtful architecture.<br />Lasting belonging.</p>
+          <p>A place to slow down.<br />A home in Kochi.</p>
+        </div>
 
-      <h1 id="hero-title" className={styles.title}>Citysky</h1>
-      <nav className={styles.heroActions} aria-label="Find your home">
-        <TransitionLink href="/contact" className={styles.priceAction}>
-          <span>Starting from</span><strong>₹55 lakhs</strong>
-        </TransitionLink>
-        <TransitionLink href="/projects" className={styles.exploreAction}>
-          <span>Find your home</span><strong>Explore projects ↗</strong>
-        </TransitionLink>
-      </nav>
+        <h1 id="hero-title" className={styles.title}>Citysky</h1>
+        <nav className={styles.heroActions} aria-label="Find your home">
+          <TransitionLink href="/contact" className={styles.priceAction}>
+            <span>Starting from</span><strong>₹55 lakhs</strong>
+          </TransitionLink>
+          <TransitionLink href="/projects" className={styles.exploreAction}>
+            <span>Find your home</span><strong>Explore projects ↗</strong>
+          </TransitionLink>
+        </nav>
 
-      <div className={`${styles.scene} ${styles.foreground}`} aria-hidden="true">
-        <Image
-          src="/images/hero-home-clean-roof.webp"
-          unoptimized
-          alt=""
-          fill
-          className={styles.image}
-          loading="eager"
-        />
-      </div>
+        <div className={`${styles.scene} ${styles.foreground}`} aria-hidden="true">
+          <picture>
+            <source media="(max-width: 600px)" srcSet="/images/hero-home-portrait.webp" />
+          <Image
+            src="/images/hero-home-landscape.webp"
+            unoptimized
+            alt=""
+            fill
+            className={styles.image}
+            loading="eager"
+          />
+          </picture>
+        </div>
 
-      <div className={styles.shade} aria-hidden="true" />
+        <div className={styles.shade} aria-hidden="true" />
       </div>
 
       <div className={styles.footer}>
