@@ -15,7 +15,7 @@ export function ComparisonTable({ id = "compare" }: { id?: string }) {
     const t = table.current;
     if (!t) return;
     const mm = gsap.matchMedia();
-    mm.add(MOTION_OK, () => {
+    mm.add(`${MOTION_OK} and (min-width: 900px)`, () => {
       gsap.fromTo(
         t.querySelectorAll("tbody tr"),
         { autoAlpha: 0, y: 10 },
@@ -46,9 +46,41 @@ export function ComparisonTable({ id = "compare" }: { id?: string }) {
           </RevealText>
         </div>
 
-        <p className={`label muted ${styles.hint}`}>
-          Scroll the table sideways
-        </p>
+        <div className={styles.mobileComparison}>
+          <p className={styles.mobileIntro}>
+            Each tier builds on the last. Here’s what is included, and what you gain.
+          </p>
+          <ol className={styles.tierCards}>
+            {tiers.map((tier, index) => (
+              <li
+                key={tier.key}
+                className={cx(styles.tierCard, tier.key === "fully" && styles.fully)}
+              >
+                <div className={styles.cardHeading}>
+                  <span className={styles.cardNumber} aria-hidden="true">{tier.numeral}</span>
+                  <h3>{tier.name}</h3>
+                </div>
+                <p className={styles.cardSummary}>
+                  {index === 0
+                    ? "The essentials, included in all three tiers."
+                    : <>Everything in {tiers[index - 1].name}, plus:</>}
+                </p>
+                <ul className={styles.cardFeatures}>
+                  {comparisonRows
+                    .filter(row => row.tiers[index] && (index === 0 || !row.tiers[index - 1]))
+                    .map(row => (
+                      <li key={row.feature}>
+                        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                          <path d="m3 8 3 3 7-7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                        <span>{row.feature}</span>
+                      </li>
+                    ))}
+                </ul>
+              </li>
+            ))}
+          </ol>
+        </div>
         <div className={styles.wrap}>
           <div className={styles.scroller}>
             <table ref={table} className={styles.table}>
