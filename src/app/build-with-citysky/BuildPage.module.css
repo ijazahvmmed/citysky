@@ -1,0 +1,59 @@
+.hero { padding-top: calc(var(--nav-h) + clamp(3rem, 8vw, 7rem)); padding-bottom: var(--space-section); }
+.title { font-size: clamp(3rem, 7vw, 6.5rem); font-weight: 400; line-height: 1.03; letter-spacing: -0.065em; max-width: 15ch; }
+.heroBottom { margin-top: 3rem; display: flex; justify-content: space-between; align-items: flex-end; gap: 3rem; }
+.heroBottom p { max-width: 41ch; font-size: clamp(1rem, 1.7vw, 1.3rem); color: var(--text-secondary); line-height: 1.65; }
+.heroBottom a { flex-shrink: 0; font-size: 0.9375rem; }
+.processGrid { display: grid; grid-template-columns: 1fr 1.25fr; gap: 12%; }
+.sectionIntro { margin-top: 1.5rem; max-width: 29ch; color: var(--text-secondary); font-size: 1rem; }
+.processList { border-top: 1px solid var(--border-strong); }
+.processList li { display: grid; grid-template-columns: 2rem 1fr; gap: 1.5rem; border-bottom: 1px solid var(--border-strong); padding-block: 2rem; }
+.number { font-size: 0.6875rem; letter-spacing: 0.08em; color: var(--text-secondary); font-variant-numeric: tabular-nums; }
+.processList h3 { font-size: 1.7rem; line-height: 1.1; letter-spacing: -0.04em; font-weight: 400; margin-bottom: 1rem; }
+.processList h4 { font-size: 0.9375rem; font-weight: 500; line-height: 1.5; margin-bottom: 0.5rem; }
+.processList p { color: var(--text-secondary); font-size: 0.9375rem; line-height: 1.7; max-width: 48ch; }
+.team { border-top: 1px solid var(--border); }
+.sectionHeading { display: grid; grid-template-columns: 1fr 0.7fr; gap: 15%; align-items: end; margin-bottom: 3rem; }
+.sectionHeading > p { color: var(--text-secondary); font-size: 1rem; max-width: 36ch; }
+.services { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--border-strong); }
+.services li { padding: 1.25rem 2rem 0 0; }
+.services li + li { padding-left: 1.5rem; border-left: 1px solid var(--border); }
+.services h3 { font-size: clamp(1.2rem, 2vw, 1.75rem); font-weight: 400; letter-spacing: -0.04em; margin-top: 1.75rem; margin-bottom: 0.8rem; }
+.services p { color: var(--text-secondary); font-size: 0.875rem; max-width: 24ch; line-height: 1.65; }
+.proofGrid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 6%; align-items: start; }
+.proofLink:nth-child(2) { margin-top: 6rem; }
+.proofImage { aspect-ratio: 4 / 3; }
+.proofInfo { display: flex; gap: 1rem; justify-content: space-between; align-items: baseline; margin-top: 1rem; }
+.proofInfo h3 { font-size: 1.4rem; font-weight: 400; letter-spacing: -0.04em; }
+.proofInfo span { color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.625rem; }
+.proofLocation { color: var(--text-secondary); font-size: 0.8125rem; margin-top: 0.15rem; }
+.proofFinish { margin-top: 5rem; display: flex; justify-content: space-between; align-items: flex-end; gap: 2rem; }
+.proofFinish a { flex-shrink: 0; }
+@media (max-width: 899px) {
+  .processGrid { gap: 6%; }
+  .sectionHeading { gap: 5%; }
+  .services { grid-template-columns: repeat(2, 1fr); row-gap: 2rem; }
+  .services li:nth-child(3) { padding-left: 0; border-left: 0; }
+}
+@media (max-width: 600px) {
+  .hero { padding-top: calc(var(--nav-h) + 3rem); }
+  .title { font-size: clamp(2.4rem, 10vw, 3.5rem); }
+  .heroBottom { display: block; margin-top: 1.75rem; }
+  .heroBottom p { font-size: 0.9375rem; }
+  .heroBottom a { margin-top: 1.5rem; font-size: 0.8125rem; }
+  .processGrid, .sectionHeading { grid-template-columns: 1fr; gap: 2rem; }
+  .sectionIntro, .sectionHeading > p { font-size: 0.875rem; }
+  .processList li { gap: 0.75rem; grid-template-columns: 1.5rem 1fr; padding-block: 1.5rem; }
+  .processList h3 { font-size: 1.4rem; margin-bottom: 0.7rem; }
+  .processList h4, .processList p { font-size: 0.8125rem; }
+  .services li { padding-right: 1rem; }
+  .services li + li { padding-left: 1rem; }
+  .services li:nth-child(3) { padding-left: 0; }
+  .services h3 { font-size: 1.15rem; margin-top: 1rem; }
+  .services p { font-size: 0.8125rem; }
+  .proofGrid { grid-template-columns: 1fr; gap: 2.5rem; }
+  .proofLink:nth-child(2) { margin-top: 0; }
+  .proofInfo h3 { font-size: 1.2rem; }
+  .proofLocation { font-size: 0.75rem; }
+  .proofFinish { display: block; margin-top: 3rem; }
+  .proofFinish a { margin-top: 1.5rem; font-size: 0.8125rem; }
+}

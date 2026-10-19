@@ -24,6 +24,7 @@ export const site = {
   ],
   nav: [
     { label: "Projects", href: "/projects" },
+    { label: "Build With Citysky", href: "/build-with-citysky" },
     { label: "Studio", href: "/about" },
     { label: "Journal", href: "/journal" },
     { label: "Contact", href: "/contact" },
