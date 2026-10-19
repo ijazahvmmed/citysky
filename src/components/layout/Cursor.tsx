@@ -5,7 +5,7 @@ import { gsap, FINE_POINTER, prefersReducedMotion } from "@/lib/gsap";
 import styles from "./Cursor.module.css";
 
 const INTERACTIVE =
-  '[data-cursor], a, button, [role="button"], input, select, textarea, label';
+  '[data-cursor]:not(html), a, button, [role="button"], input, select, textarea, label';
 
 /**
  * Desktop-only custom cursor. Small dot that grows and shows contextual

@@ -1,214 +1,301 @@
 import * as THREE from "three";
 import { createArchitecturalModel } from "./architectural-model";
+import { createDaylightEnvironment } from "./scene-surfaces";
+import { createArchitecturalOcclusion } from "./architectural-occlusion";
 import { phase } from "./assembly";
 import type { BuildingScene, Completion } from "./scene-contract";
-
-/** Demand-rendered perspective scene. Scroll is the construction clock;
- * only inspection and its gentle return use time-based interpolation. */
+/** Scroll controls construction and the base camera. Inspection is an additive,
+ * persistent orbit, never a competing timeline or a rotation of the building. */
 export function createBuildingScene(host: HTMLElement, onFailure: () => void): BuildingScene {
-  const mobileQuery = matchMedia("(max-width: 767px)");
-  const motionQuery = matchMedia("(prefers-reduced-motion: reduce)");
-  let mobile = mobileQuery.matches;
-  let reduced = motionQuery.matches;
-  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "low-power" });
-  renderer.setClearColor(0xfafaf8, 0);
-  renderer.shadowMap.type = THREE.PCFShadowMap;
-  renderer.outputColorSpace = THREE.SRGBColorSpace;
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.15;
-  const canvas = renderer.domElement;
-  canvas.setAttribute("aria-hidden", "true");
-  host.appendChild(canvas);
-
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(36, 1, 0.1, 100);
-  const ambient = new THREE.HemisphereLight(0xfaf9f3, 0x969c92, 1.95);
-  scene.add(ambient);
-  const sun = new THREE.DirectionalLight(0xfff6e6, 3.2);
-  sun.position.set(-6, 13, 8);
-  sun.shadow.mapSize.set(1024, 1024);
-  Object.assign(sun.shadow.camera, { left: -10, right: 10, top: 10, bottom: -10, near: 0.5, far: 40 });
-  sun.shadow.normalBias = 0.025;
-  sun.shadow.bias = -0.00015;
-  sun.shadow.radius = 3;
-  scene.add(sun);
-  const fill = new THREE.DirectionalLight(0xe6eef2, 0.7);
-  fill.position.set(7, 8, -5); scene.add(fill);
-  const groundMaterial = new THREE.ShadowMaterial({ color: 0x485044, opacity: 0.11 });
-  const groundGeometry = new THREE.PlaneGeometry(200, 200);
-  const ground = new THREE.Mesh(groundGeometry, groundMaterial);
-  ground.rotation.x = -Math.PI / 2; ground.position.y = -0.225; ground.receiveShadow = true;
-  scene.add(ground);
-  const model = createArchitecturalModel(scene);
-
-  let progress = 0;
-  let completion: Completion | null = null;
-  let finish = 0;
-  let finishTarget = 0;
-  let frame = 0;
-  let disposed = false;
-  let visible = false;
-  let dirty = true;
-  let lastTime = 0;
-  let dragYaw = 0;
-  let dragPitch = 0;
-  let hoverYaw = 0;
-  let hoverPitch = 0;
-  let yaw = 0;
-  let pitch = 0;
-  let returnTimer: ReturnType<typeof setTimeout> | undefined;
-  let pointer: { id: number; x: number; y: number; yaw: number; pitch: number; touch: boolean; direction: "pending" | "horizontal" | "vertical" } | null = null;
-  const degrees = THREE.MathUtils.degToRad;
-  const coldSun = new THREE.Color(0xfff6e6);
-  const warmSun = new THREE.Color(0xffddb0);
-  const coldAmbient = new THREE.Color(0xfaf9f3);
-  const warmAmbient = new THREE.Color(0xffead1);
-
-  function compose() {
-    const p = completion ? 1 : progress;
-    const movement = reduced ? 1 : phase(p, 0.08, 0.96);
-    // Mobile uses its own more frontal composition and lens.
-    const azimuth = degrees(mobile ? 18 + movement * 9 : 29 + movement * 10) + yaw;
-    const elevation = degrees(mobile ? 30 - movement * 8 : 37 - movement * 12) + pitch;
-    camera.fov = mobile ? 42 : 36;
-    const tangent = Math.tan(degrees(camera.fov / 2));
-    const verticalFit = (mobile ? 8.4 : 9.2) / (2 * tangent);
-    const horizontalFit = (mobile ? 11.6 : 12.4) / (2 * tangent * camera.aspect);
-    const distance = Math.max(verticalFit, horizontalFit) * (mobile ? 1.38 - movement * 0.14 : 1.54 - movement * 0.16);
-    const targetY = mobile ? 2.4 : 2.35;
-    camera.position.set(Math.sin(azimuth) * Math.cos(elevation) * distance, targetY + Math.sin(elevation) * distance, Math.cos(azimuth) * Math.cos(elevation) * distance);
-    camera.lookAt(0, targetY, 0.25);
-    camera.updateProjectionMatrix();
-  }
-  function requestRender() {
-    if (frame || disposed || !visible || document.hidden) return;
-    frame = requestAnimationFrame(render);
-  }
-  function render(time: number) {
-    frame = 0;
-    if (disposed || !visible || document.hidden) return;
-    const dt = Math.min(0.05, (time - lastTime) / 1000 || 1 / 60);
-    lastTime = time;
-    const damping = reduced ? 1 : 1 - Math.exp(-dt * 6.5);
-    const targetYaw = THREE.MathUtils.clamp(dragYaw + hoverYaw, degrees(-15), degrees(15));
-    const targetPitch = THREE.MathUtils.clamp(dragPitch + hoverPitch, degrees(-5), degrees(6));
-    yaw += (targetYaw - yaw) * damping;
-    pitch += (targetPitch - pitch) * damping;
-    const finishBefore = finish;
-    finish += (finishTarget - finish) * damping;
-    if (Math.abs(finishTarget - finish) < 0.0001) finish = finishTarget;
-    if (dirty || Math.abs(finishBefore - finish) > 0.00001) {
-      const warmth = model.update(progress, completion, finish);
-      sun.color.copy(coldSun).lerp(warmSun, warmth);
-      sun.position.set(-6 - warmth * 2, 13 - warmth * 3, 8);
-      sun.intensity = 3.2 - warmth * 0.65;
-      ambient.color.copy(coldAmbient).lerp(warmAmbient, warmth * 0.4);
-      ambient.intensity = 1.95 - warmth * 0.35;
-      dirty = false;
+    const mobileQuery = matchMedia("(max-width: 767px), (pointer: coarse)");
+    const motionQuery = matchMedia("(prefers-reduced-motion: reduce)");
+    let mobile = mobileQuery.matches, reduced = motionQuery.matches;
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "low-power" });
+    renderer.setClearColor(0xfafaf8, 0);
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFShadowMap;
+    renderer.shadowMap.autoUpdate = false;
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1;
+    const canvas = renderer.domElement;
+    canvas.setAttribute("aria-hidden", "true");
+    host.appendChild(canvas);
+    const scene = new THREE.Scene();
+    const environment = createDaylightEnvironment(renderer);
+    scene.environment = environment.texture;
+    scene.environmentIntensity = 0.55;
+    const camera = new THREE.PerspectiveCamera(39, 1, .1, 120);
+    const ambient = new THREE.HemisphereLight(0xe0e7ed, 0x797460, 0.48);
+    scene.add(ambient);
+    const sun = new THREE.DirectionalLight(0xfff3dc, 3);
+    sun.position.set(-7, 11, 7);
+    sun.castShadow = true;
+    Object.assign(sun.shadow.camera, { left: -12, right: 12, top: 12, bottom: -12, near: .5, far: 40 });
+    sun.shadow.normalBias = .035;
+    sun.shadow.bias = -.00012;
+    sun.shadow.radius = 9;
+    sun.shadow.intensity = .65;
+    scene.add(sun);
+    const fill = new THREE.DirectionalLight(0xe3eaf1, .35);
+    fill.position.set(8, 6, -6);
+    scene.add(fill);
+    const model = createArchitecturalModel(scene, mobile, Math.min(8, renderer.capabilities.getMaxAnisotropy()));
+    let occlusion = mobile ? null : createArchitecturalOcclusion(renderer, scene, camera);
+    let progress = 0, completion: Completion | null = null, finish = 0, finishTarget = 0;
+    let frame = 0, timer: ReturnType<typeof setTimeout> | undefined, disposed = false, visible = false, dirty = true;
+    let lastTime = 0, elapsed = 0, slowFrames = 0, dprLimit = 2;
+    let targetYaw = 0, targetPitch = 0, yaw = 0, pitch = 0, zoom = 1, targetZoom = 1, inspected = false;
+    let pointer: {
+        id: number;
+        x: number;
+        y: number;
+        yaw: number;
+        pitch: number;
+        touch: boolean;
+        direction: "pending" | "horizontal" | "vertical";
+    } | null = null;
+    const degrees = THREE.MathUtils.degToRad;
+    const framingPoints = [
+        ...[-6.4, 6.4].flatMap(x => [-5.5, 6.6].map(z => new THREE.Vector3(x, -.2, z))),
+        ...[-4.4, 4.4].flatMap(x => [-3.2, 3.75].map(z => new THREE.Vector3(x, 6.8, z))),
+    ];
+    const direction = new THREE.Vector3(), right = new THREE.Vector3(), viewUp = new THREE.Vector3(), point = new THREE.Vector3(), target = new THREE.Vector3();
+    function compose() {
+        const p = completion ? 1 : progress, movement = phase(p, .08, .96);
+        const drift = !reduced && !inspected && p >= .97 ? Math.sin(elapsed * .17) * degrees(1.15) : 0;
+        const azimuth = degrees(mobile ? 25 + movement * 8 : 26 + movement * 9) + yaw + drift;
+        const elevation = THREE.MathUtils.clamp(degrees(34 - movement * 17) + pitch, degrees(10), degrees(48));
+        camera.fov = mobile ? 43 : 39;
+        target.set(0, mobile ? 2.15 : 2.25, .3);
+        const tangent = Math.tan(degrees(camera.fov / 2));
+        direction.set(Math.sin(azimuth) * Math.cos(elevation), Math.sin(elevation), Math.cos(azimuth) * Math.cos(elevation));
+        right.set(Math.cos(azimuth), 0, -Math.sin(azimuth));
+        viewUp.crossVectors(direction, right);
+        let distance = 0;
+        for (const vertex of framingPoints) {
+            point.copy(vertex).sub(target);
+            distance = Math.max(distance, point.dot(direction) + Math.max(Math.abs(point.dot(right)) / (tangent * camera.aspect * (mobile ? 1.18 : .97)), Math.abs(point.dot(viewUp)) / (tangent * .93)));
+        }
+        distance *= (1.07 - movement * .07) * zoom;
+        camera.position.copy(target).addScaledVector(direction, distance);
+        camera.lookAt(target);
+        camera.updateProjectionMatrix();
     }
-    compose();
-    renderer.render(scene, camera);
-    if (Math.abs(targetYaw - yaw) + Math.abs(targetPitch - pitch) > 0.00008 || Math.abs(finishTarget - finish) > 0.0001) requestRender();
-  }
-  function scheduleReturn(delay = 900) {
-    clearTimeout(returnTimer);
-    returnTimer = setTimeout(() => { dragYaw = dragPitch = 0; requestRender(); }, reduced ? 0 : delay);
-  }
-  function down(event: PointerEvent) {
-    if (!event.isPrimary || (event.pointerType === "mouse" && event.button !== 0)) return;
-    clearTimeout(returnTimer);
-    pointer = { id: event.pointerId, x: event.clientX, y: event.clientY, yaw: dragYaw, pitch: dragPitch, touch: event.pointerType !== "mouse", direction: "pending" };
-    hoverYaw = hoverPitch = 0;
-    if (!pointer.touch) host.setPointerCapture(event.pointerId);
-  }
-  function move(event: PointerEvent) {
-    if (pointer && event.pointerId === pointer.id) {
-      const dx = event.clientX - pointer.x;
-      const dy = event.clientY - pointer.y;
-      if (pointer.touch && pointer.direction === "pending" && Math.max(Math.abs(dx), Math.abs(dy)) > 7) {
-        pointer.direction = Math.abs(dx) > Math.abs(dy) * 1.15 ? "horizontal" : "vertical";
-        if (pointer.direction === "horizontal") host.setPointerCapture(event.pointerId);
-      }
-      if (pointer.touch && pointer.direction !== "horizontal") return;
-      dragYaw = THREE.MathUtils.clamp(pointer.yaw - dx / Math.max(host.clientWidth, 1) * 0.75, degrees(-13), degrees(13));
-      dragPitch = pointer.touch ? 0 : THREE.MathUtils.clamp(pointer.pitch + dy / Math.max(host.clientHeight, 1) * 0.32, degrees(-4), degrees(5));
-      requestRender();
-    } else if (event.pointerType === "mouse" && !mobile && !reduced) {
-      const rect = host.getBoundingClientRect();
-      hoverYaw = ((event.clientX - rect.left) / rect.width - 0.5) * degrees(4);
-      hoverPitch = ((event.clientY - rect.top) / rect.height - 0.5) * degrees(2);
-      requestRender();
+    function requestRender() {
+        if (frame || disposed || !visible || document.hidden)
+            return;
+        clearTimeout(timer);
+        timer = undefined;
+        frame = requestAnimationFrame(render);
     }
-  }
-  function up(event: PointerEvent) {
-    if (pointer?.id !== event.pointerId) return;
-    if (host.hasPointerCapture(event.pointerId)) host.releasePointerCapture(event.pointerId);
-    pointer = null; scheduleReturn();
-  }
-  function leave() { hoverYaw = hoverPitch = 0; if (!pointer) scheduleReturn(150); requestRender(); }
-  function key(event: KeyboardEvent) {
-    if (!["ArrowLeft", "ArrowRight", "Home"].includes(event.key)) return;
-    event.preventDefault();
-    dragYaw = event.key === "Home" ? 0 : THREE.MathUtils.clamp(dragYaw + degrees(event.key === "ArrowLeft" ? -4 : 4), degrees(-13), degrees(13));
-    requestRender(); scheduleReturn(1600);
-  }
-  function resize() {
-    const { width, height } = host.getBoundingClientRect();
-    if (!width || !height) return;
-    mobile = mobileQuery.matches;
-    renderer.setPixelRatio(Math.min(devicePixelRatio, mobile ? 1.25 : 1.6));
-    renderer.shadowMap.enabled = !mobile;
-    sun.castShadow = !mobile;
-    renderer.setSize(width, height);
-    camera.aspect = width / height;
-    dirty = true; requestRender();
-  }
-  function motionChange() {
-    reduced = motionQuery.matches;
-    hoverYaw = hoverPitch = dragYaw = dragPitch = 0;
-    if (reduced) { yaw = pitch = 0; finish = finishTarget; }
-    dirty = true; requestRender();
-  }
-  function visibilityChange() {
-    if (document.hidden) { cancelAnimationFrame(frame); frame = 0; }
-    else { lastTime = 0; dirty = true; requestRender(); }
-  }
-  const resizeObserver = new ResizeObserver(resize);
-  resizeObserver.observe(host);
-  const intersectionObserver = new IntersectionObserver(([entry]) => {
-    visible = entry.isIntersecting;
-    if (visible) { lastTime = 0; dirty = true; requestRender(); }
-    else { cancelAnimationFrame(frame); frame = 0; }
-  }, { rootMargin: "100px" });
-  intersectionObserver.observe(host);
-  const contextLost = (event: Event) => { event.preventDefault(); visible = false; cancelAnimationFrame(frame); frame = 0; onFailure(); };
-  canvas.addEventListener("webglcontextlost", contextLost);
-  host.addEventListener("pointerdown", down); host.addEventListener("pointermove", move);
-  host.addEventListener("pointerup", up); host.addEventListener("pointercancel", up);
-  host.addEventListener("pointerleave", leave); host.addEventListener("keydown", key);
-  motionQuery.addEventListener("change", motionChange); mobileQuery.addEventListener("change", resize);
-  document.addEventListener("visibilitychange", visibilityChange);
-  resize();
-  return {
-    setProgress(value) { progress = THREE.MathUtils.clamp(value, 0, 1); dirty = true; requestRender(); },
-    setCompletion(value) {
-      const first = completion === null;
-      completion = value;
-      finishTarget = value === "pinnacle" ? 1 : value === "essentials" ? 0.5 : 0;
-      if (first || reduced) finish = finishTarget;
-      dirty = true; requestRender();
-    },
-    dispose() {
-      disposed = true; cancelAnimationFrame(frame); clearTimeout(returnTimer);
-      resizeObserver.disconnect(); intersectionObserver.disconnect();
-      canvas.removeEventListener("webglcontextlost", contextLost);
-      host.removeEventListener("pointerdown", down); host.removeEventListener("pointermove", move);
-      host.removeEventListener("pointerup", up); host.removeEventListener("pointercancel", up);
-      host.removeEventListener("pointerleave", leave); host.removeEventListener("keydown", key);
-      motionQuery.removeEventListener("change", motionChange); mobileQuery.removeEventListener("change", resize);
-      document.removeEventListener("visibilitychange", visibilityChange);
-      model.dispose(); groundGeometry.dispose(); groundMaterial.dispose();
-      renderer.dispose(); renderer.forceContextLoss(); canvas.remove();
-    },
-  };
+    function render(time: number) {
+        frame = 0;
+        if (disposed || !visible || document.hidden)
+            return;
+        const frameDuration = (time - lastTime) / 1000 || 1 / 60;
+        const dt = Math.min(.05, frameDuration);
+        lastTime = time;
+        elapsed += dt;
+        const damping = reduced ? 1 : 1 - Math.exp(-dt * 8);
+        yaw += (targetYaw - yaw) * damping;
+        pitch += (targetPitch - pitch) * damping;
+        zoom += (targetZoom - zoom) * damping;
+        const before = finish;
+        finish += (finishTarget - finish) * damping;
+        if (Math.abs(finishTarget - finish) < .0001)
+            finish = finishTarget;
+        if (dirty || Math.abs(before - finish) > .00001) {
+            const warmth = model.update(progress, completion, finish);
+            sun.color.set(0xfff3dc).lerp(new THREE.Color(0xffe2bb), warmth * .35);
+            sun.intensity = 3 - warmth * .8;
+            ambient.intensity = .48 - warmth * .08;
+            renderer.shadowMap.needsUpdate = true;
+            dirty = false;
+        }
+        model.animate(reduced ? 0 : elapsed);
+        compose();
+        const started = performance.now();
+        if (occlusion && !mobile)
+            occlusion.render();
+        else
+            renderer.render(scene, camera);
+        // Preserve crisp mobile architecture; only sustained slow rendering reduces
+        // resolution, never below 1.5 on a high-DPI device. Plant density is reduced first.
+        if (performance.now() - started > 28 || (pointer?.direction === "horizontal" && frameDuration > .06))
+            slowFrames++;
+        else
+            slowFrames = Math.max(0, slowFrames - 1);
+        if (slowFrames > 45 && occlusion) {
+            occlusion.dispose();
+            occlusion = null;
+            slowFrames = 0;
+        }
+        else if (slowFrames > 45 && dprLimit > 1.5) {
+            dprLimit -= .25;
+            slowFrames = 0;
+            resize();
+        }
+        const settling = Math.abs(targetYaw - yaw) + Math.abs(targetPitch - pitch) + Math.abs(targetZoom - zoom) + Math.abs(finishTarget - finish) > .0001;
+        if (settling || pointer?.direction === "horizontal")
+            requestRender();
+        else if (!reduced && (completion !== null || progress > .8))
+            timer = setTimeout(requestRender, 33);
+    }
+    function stopDrift() {
+        if (!inspected) {
+            if (!reduced && (completion || progress >= .97)) {
+                const offset = Math.sin(elapsed * .17) * degrees(1.15);
+                yaw += offset;
+                targetYaw += offset;
+            }
+            inspected = true;
+        }
+    }
+    function inspect() {
+        stopDrift();
+        host.dataset.inspected = "true";
+    }
+    function down(event: PointerEvent) {
+        if (!event.isPrimary || (event.pointerType === "mouse" && event.button !== 0))
+            return;
+        // Freeze drift on contact while preserving its current offset.
+        stopDrift();
+        pointer = { id: event.pointerId, x: event.clientX, y: event.clientY, yaw: targetYaw, pitch: targetPitch, touch: event.pointerType !== "mouse", direction: "pending" };
+        if (!pointer.touch)
+            host.setPointerCapture(event.pointerId);
+    }
+    function move(event: PointerEvent) {
+        if (!pointer || event.pointerId !== pointer.id)
+            return;
+        const dx = event.clientX - pointer.x, dy = event.clientY - pointer.y;
+        if (pointer.direction === "pending" && Math.max(Math.abs(dx), Math.abs(dy)) > 6) {
+            pointer.direction = !pointer.touch || Math.abs(dx) > Math.abs(dy) * 1.15 ? "horizontal" : "vertical";
+            if (pointer.direction === "horizontal") {
+                host.setPointerCapture(event.pointerId);
+                host.dataset.inspected = "true";
+            }
+        }
+        if (pointer.direction !== "horizontal")
+            return;
+        targetYaw = pointer.yaw - dx / Math.max(host.clientWidth, 1) * Math.PI * 2;
+        targetPitch = pointer.touch ? pointer.pitch : THREE.MathUtils.clamp(pointer.pitch + dy / Math.max(host.clientHeight, 1) * .8, degrees(-22), degrees(30));
+        requestRender();
+    }
+    function up(event: PointerEvent) {
+        if (pointer?.id !== event.pointerId)
+            return;
+        if (host.hasPointerCapture(event.pointerId))
+            host.releasePointerCapture(event.pointerId);
+        pointer = null;
+        requestRender();
+    }
+    function key(event: KeyboardEvent) {
+        if (!["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "+", "=", "-"].includes(event.key))
+            return;
+        event.preventDefault();
+        inspect();
+        if (event.key === "Home") {
+            targetYaw = Math.round(targetYaw / (Math.PI * 2)) * Math.PI * 2;
+            targetPitch = 0;
+            targetZoom = 1;
+        }
+        if (event.key === "ArrowLeft" || event.key === "ArrowRight")
+            targetYaw += degrees(event.key === "ArrowLeft" ? -15 : 15);
+        if (event.key === "ArrowUp" || event.key === "ArrowDown")
+            targetPitch = THREE.MathUtils.clamp(targetPitch + degrees(event.key === "ArrowUp" ? 4 : -4), degrees(-22), degrees(30));
+        if (["+", "=", "-"].includes(event.key))
+            targetZoom = THREE.MathUtils.clamp(targetZoom * (event.key === "-" ? 1.08 : 1 / 1.08), .9, 1.22);
+        requestRender();
+    }
+    function wheel(event: WheelEvent) {
+        // Ordinary wheel/touch scrolling always belongs to the page.
+        if (!event.ctrlKey && !event.metaKey)
+            return;
+        event.preventDefault();
+        inspect();
+        targetZoom = THREE.MathUtils.clamp(targetZoom * Math.exp(event.deltaY * .002), .9, 1.22);
+        requestRender();
+    }
+    function resize() {
+        const { width, height } = host.getBoundingClientRect();
+        if (!width || !height)
+            return;
+        mobile = mobileQuery.matches;
+        renderer.setPixelRatio(Math.min(devicePixelRatio, dprLimit));
+        renderer.setSize(width, height);
+        camera.aspect = width / height;
+        occlusion?.resize(width, height);
+        const shadowSize = mobile ? 1024 : 2048;
+        if (sun.shadow.mapSize.x !== shadowSize) {
+            sun.shadow.mapSize.set(shadowSize, shadowSize);
+            sun.shadow.map?.dispose();
+            sun.shadow.map = null;
+        }
+        dirty = true;
+        requestRender();
+    }
+    function motionChange() { reduced = motionQuery.matches; if (reduced) {
+        yaw = targetYaw;
+        pitch = targetPitch;
+        zoom = targetZoom;
+        finish = finishTarget;
+    } dirty = true; requestRender(); }
+    function pause() { cancelAnimationFrame(frame); frame = 0; clearTimeout(timer); timer = undefined; }
+    function visibilityChange() { if (document.hidden)
+        pause();
+    else {
+        lastTime = 0;
+        requestRender();
+    } }
+    const resizeObserver = new ResizeObserver(resize);
+    resizeObserver.observe(host);
+    const observer = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; if (visible) {
+        lastTime = 0;
+        requestRender();
+    }
+    else
+        pause(); });
+    observer.observe(host);
+    const contextLost = (event: Event) => { event.preventDefault(); visible = false; pause(); onFailure(); };
+    canvas.addEventListener("webglcontextlost", contextLost);
+    host.addEventListener("pointerdown", down);
+    host.addEventListener("pointermove", move);
+    host.addEventListener("pointerup", up);
+    host.addEventListener("pointercancel", up);
+    host.addEventListener("keydown", key);
+    host.addEventListener("wheel", wheel, { passive: false });
+    motionQuery.addEventListener("change", motionChange);
+    mobileQuery.addEventListener("change", resize);
+    document.addEventListener("visibilitychange", visibilityChange);
+    resize();
+    return {
+        setProgress(value) { progress = THREE.MathUtils.clamp(value, 0, 1); dirty = true; requestRender(); },
+        setCompletion(value) { const first = completion === null; completion = value; finishTarget = value === "pinnacle" ? 1 : value === "essentials" ? .5 : 0; if (first || reduced)
+            finish = finishTarget; dirty = true; requestRender(); },
+        dispose() {
+            disposed = true;
+            pause();
+            resizeObserver.disconnect();
+            observer.disconnect();
+            canvas.removeEventListener("webglcontextlost", contextLost);
+            host.removeEventListener("pointerdown", down);
+            host.removeEventListener("pointermove", move);
+            host.removeEventListener("pointerup", up);
+            host.removeEventListener("pointercancel", up);
+            host.removeEventListener("keydown", key);
+            host.removeEventListener("wheel", wheel);
+            motionQuery.removeEventListener("change", motionChange);
+            mobileQuery.removeEventListener("change", resize);
+            document.removeEventListener("visibilitychange", visibilityChange);
+            occlusion?.dispose();
+            model.dispose();
+            environment.dispose();
+            sun.shadow.dispose();
+            renderer.dispose();
+            renderer.forceContextLoss();
+            canvas.remove();
+            delete host.dataset.inspected;
+        },
+    };
 }

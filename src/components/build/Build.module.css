@@ -10,16 +10,19 @@
 .sceneCaption { display: flex; justify-content: space-between; gap: 1rem; position: absolute; inset: 0 0 auto; font-size: 0.625rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-secondary); }
 .viewport { position: relative; width: 100%; height: 100%; min-height: 240px; }
 .canvas, .fallback { position: absolute; inset: 0; width: 100%; height: 100%; }
-.canvas { touch-action: pan-y pinch-zoom; cursor: grab; user-select: none; -webkit-user-select: none; }
+.canvas { touch-action: pan-y pinch-zoom; cursor: grab; user-select: none; -webkit-user-select: none; background: radial-gradient(ellipse at 50% 65%, #dfe4dc 0%, #eef0eb 45%, transparent 75%); mask-image: linear-gradient(to bottom, transparent, #000 8%, #000 84%, transparent), linear-gradient(to right, transparent, #000 5%, #000 95%, transparent); mask-composite: intersect; }
 .canvas:active { cursor: grabbing; }
 .canvas:focus-visible { outline-offset: -4px; }
 .canvas canvas { width: 100%; height: 100%; display: block; }
-.viewHint { position: absolute; bottom: 0.5rem; left: 0; width: 100%; text-align: center; font-size: 0.625rem; color: var(--text-secondary); pointer-events: none; }
+.viewHint { position: absolute; bottom: 0.5rem; left: 0; width: 100%; text-align: center; font-size: 0.625rem; color: var(--text-secondary); pointer-events: none; transition: opacity 0.7s ease; }
+.canvas[data-inspected="true"] ~ .viewHint { opacity: 0; }
+.canvas:focus-visible ~ .viewHint { opacity: 1; }
+.keyboardHint { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .phaseLabel { animation: phase-enter 0.35s ease-out both; }
 @keyframes phase-enter { from { opacity: 0.4; transform: translateY(3px); } to { opacity: 1; transform: translateY(0); } }
 .fallback { object-fit: contain; }
 .sequenceFoot { grid-column: 1 / -1; }
-.stageRow { display: flex; justify-content: space-between; gap: 1rem; }
+.stageRow { display: none; }
 .stageRow button { display: flex; gap: 0.7rem; align-items: baseline; min-height: 44px; font-size: 0.8125rem; color: var(--text-secondary); }
 .stageRow button span { font-size: 0.625rem; font-variant-numeric: tabular-nums; color: var(--text-secondary); }
 .stageRow button.activeStage { color: var(--text-primary); }
@@ -29,7 +32,12 @@
 .sequenceBottom { display: flex; gap: 1.5rem; align-items: center; justify-content: space-between; padding-top: 1rem; }
 .sequenceBottom p { font-size: 0.875rem; color: var(--text-secondary); }
 .sequenceBottom a { flex-shrink: 0; font-size: 0.875rem; }
-.mobileStage { display: none; }
+.mobileStage { display: flex; gap: 1rem; align-items: center; justify-content: space-between; font-size: 0.6875rem; color: var(--text-secondary); padding-bottom: 0.15rem; }
+.mobileStage p { display: flex; gap: 1rem; align-items: baseline; }
+.mobileStage span { color: var(--text-primary); font-size: 0.9375rem; }
+.mobileControls { display: flex; gap: 0.25rem; }
+.mobileControls button { width: 44px; height: 44px; font-size: 1rem; color: var(--text-primary); }
+.mobileControls button:disabled { opacity: 0.25; cursor: default; }
 .completion { border-block: 1px solid var(--border); }
 .completionGrid { display: grid; grid-template-columns: 0.9fr 1.5fr; gap: 7%; align-items: center; }
 .options { margin-top: 2rem; border-top: 1px solid var(--border-strong); }
@@ -54,6 +62,21 @@
 .enquiryFields input::placeholder, .enquiryFields textarea::placeholder { color: var(--text-secondary); opacity: 0.8; }
 .enquiryFields .studyNote a { text-decoration: underline; text-underline-offset: 3px; }
 
+@media (min-width: 1024px) {
+  .experienceInner { grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.8fr); grid-template-rows: minmax(0, 1fr) auto; row-gap: 0.75rem; padding-top: max(5rem, 10vh); padding-bottom: 5rem; }
+  .sceneArea { display: flex; flex-direction: column; gap: 0.75rem; }
+  .sceneCaption { position: static; flex-shrink: 0; }
+  .viewport { display: grid; grid-template-rows: minmax(0, 1fr) auto; row-gap: 0.75rem; min-height: 0; }
+  .sceneArea > .viewport { flex: 1; height: auto; }
+  .sceneArea, .viewport, .canvas { min-width: 0; }
+  .canvas { position: relative; min-height: 0; }
+  .fallback { height: calc(100% - 2rem); }
+  .viewHint { position: static; padding-bottom: 0.25rem; }
+  .completionVisual { display: flex; flex-direction: column; gap: 1rem; }
+  .completionVisual > .viewport { flex: 1; height: auto; }
+  .finishCaption { position: static; }
+}
+
 @media (max-width: 1023px) {
   .experiencePanel { min-height: 620px; }
   .experienceInner { padding-top: 5rem; padding-bottom: 5.5rem; grid-template-columns: 1fr; grid-template-rows: auto minmax(0, 1fr) auto; }
@@ -64,7 +87,6 @@
   .skip { margin-top: 0.35rem; font-size: 0.625rem; padding-block: 0.5rem; }
   .sceneCaption { display: none; }
   .viewHint { bottom: 0.5rem; font-size: 0.5625rem; }
-  .keyboardHint { display: none; }
   .stageRow { display: none; }
   .mobileStage { display: flex; gap: 1rem; align-items: center; justify-content: space-between; font-size: 0.6875rem; color: var(--text-secondary); padding-bottom: 0.15rem; }
   .mobileStage p { display: flex; gap: 1rem; align-items: baseline; }

@@ -79,7 +79,6 @@ export function BuildExperience({ expanded = false }: { expanded?: boolean }) {
             <button type="button" className={styles.skip} onClick={() => select(5)}>See the completed home <span aria-hidden="true">↗</span></button>
           </header>
           <div className={styles.sceneArea}>
-            <div className={styles.sceneCaption}><span>Citysky / Design + Build</span><span>Concept study 01</span></div>
             <BuildingViewport ref={viewport} />
           </div>
           <div className={styles.sequenceFoot}>
