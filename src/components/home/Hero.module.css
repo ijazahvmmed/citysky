@@ -298,6 +298,25 @@
   outline-offset: -3px;
 }
 
+@media (min-width: 900px) {
+  .heroActions {
+    /* Keep the desktop actions below the wordmark, beside the home. */
+    top: 46%;
+    width: min(300px, 22vw);
+    background: rgb(250 252 253 / 65%);
+    backdrop-filter: blur(12px);
+  }
+
+  .heroActions a {
+    padding-inline: 0.375rem;
+  }
+
+  .heroActions strong {
+    font-size: clamp(0.65625rem, 1.075vw, 0.8125rem);
+    white-space: nowrap;
+  }
+}
+
 @media (max-width: 600px) {
   .heroActions {
     /* Keep the buttons in place as the heading and home move down together. */
