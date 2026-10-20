@@ -3,6 +3,7 @@ import { site } from "@/lib/site";
 import { whatsappLink } from "@/lib/whatsapp";
 import { RevealText } from "@/components/motion/RevealText";
 import { ContactForm } from "@/components/contact/ContactForm";
+import { ContactLink } from "@/components/contact/ContactLink";
 import styles from "./Contact.module.css";
 
 export const metadata: Metadata = {
@@ -37,30 +38,32 @@ export default function ContactPage() {
             <div className={styles.detail}>
               <dt className="label muted">WhatsApp</dt>
               <dd>
-                <a
+                <ContactLink
+                  channel="whatsapp"
+                  section="contact-details"
                   href={whatsappLink()}
                   target="_blank"
                   rel="noopener noreferrer"
                   className={`u-line ${styles.big}`}
                 >
                   {site.phone}
-                </a>
+                </ContactLink>
               </dd>
             </div>
             <div className={styles.detail}>
               <dt className="label muted">Call</dt>
               <dd>
-                <a href={site.phoneHref} className={`u-line ${styles.big}`}>
+                <ContactLink channel="phone" section="contact-details" href={site.phoneHref} className={`u-line ${styles.big}`}>
                   {site.phone}
-                </a>
+                </ContactLink>
               </dd>
             </div>
             <div className={styles.detail}>
               <dt className="label muted">Email</dt>
               <dd>
-                <a href={`mailto:${site.email}`} className="u-line">
+                <ContactLink channel="email" section="contact-details" href={`mailto:${site.email}`} className="u-line">
                   {site.email}
-                </a>
+                </ContactLink>
               </dd>
             </div>
             <div className={styles.detail}>
@@ -73,6 +76,9 @@ export default function ContactPage() {
                   <br />
                   {site.address.line3}
                 </address>
+                <a href={site.mapsUrl} target="_blank" rel="noopener noreferrer" className="u-line">
+                  Open in Google Maps ↗
+                </a>
               </dd>
             </div>
             <div className={styles.detail}>
@@ -84,7 +90,7 @@ export default function ContactPage() {
           <div className={styles.map} data-enter>
             <iframe
               src={mapSrc}
-              title="Map of the Citysky studio, Vaduthala"
+              title="Area map of Vaduthala, Kochi"
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
             />

@@ -76,7 +76,7 @@ export function BuildExperience({ expanded = false }: { expanded?: boolean }) {
             <p className="eyebrow">Design + Build</p>
             <h2 id={id}>Your plot.<br />Imagined from<br className={styles.desktopBreak} /> the ground up.</h2>
             <p className={styles.support}>Architecture, construction and interiors — brought together by one team.</p>
-            <button type="button" className={styles.skip} onClick={() => select(5)}>See the completed home <span aria-hidden="true">↗</span></button>
+            <button type="button" className={styles.skip} onClick={() => select(stage === 5 ? 0 : 5)}>{stage === 5 ? "Replay construction" : "See the completed home"} <span aria-hidden="true">{stage === 5 ? "↺" : "↗"}</span></button>
           </header>
           <div className={styles.sceneArea}>
             <BuildingViewport ref={viewport} />
@@ -88,7 +88,7 @@ export function BuildExperience({ expanded = false }: { expanded?: boolean }) {
               </button>)}
             </div>
             <div className={styles.mobileStage}>
-              <p>{String(stage + 1).padStart(2, "0")} <span key={stage} className={styles.phaseLabel}>{constructionStages[stage].title}</span></p>
+              <p><span className={styles.stageCount}>{String(stage + 1).padStart(2, "0")} / 06</span> <span key={stage} className={styles.phaseLabel}>{constructionStages[stage].title}</span></p>
               <div className={styles.mobileControls}>
                 <button type="button" aria-label="Previous construction stage" disabled={stage === 0} onClick={() => select(stage - 1)}>←</button>
                 <button type="button" aria-label="Next construction stage" disabled={stage === 5} onClick={() => select(stage + 1)}>→</button>

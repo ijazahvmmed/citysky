@@ -36,7 +36,7 @@ export function Footer() {
             <p className="label muted">Contact</p>
             <ul className={styles.list}>
               <li>
-                <a href={site.phoneHref} className="u-line">
+                <a href={site.phoneHref} className="u-line" onClick={() => track({ name: "phone_click", page: pathname, section: "footer" })}>
                   {site.phone}
                 </a>
               </li>
@@ -58,7 +58,7 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                <a href={`mailto:${site.email}`} className="u-line">
+                <a href={`mailto:${site.email}`} className="u-line" onClick={() => track({ name: "email_click", page: pathname, section: "footer" })}>
                   {site.email}
                 </a>
               </li>
@@ -80,6 +80,9 @@ export function Footer() {
               {site.address.line3}
             </address>
             <p className={`small muted ${styles.hours}`}>{site.hours}</p>
+            <a href={site.mapsUrl} target="_blank" rel="noopener noreferrer" className="u-line">
+              Open in Google Maps ↗
+            </a>
           </div>
 
           <div className={styles.col}>

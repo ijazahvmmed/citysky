@@ -61,8 +61,8 @@ export interface Project {
   gallery: GalleryItem[];
   floorPlans: { ground: FloorPlan; first: FloorPlan };
   specs: { category: string; items: string[] }[];
+  /** Neighbourhood search only; this is not a verified project entrance pin. */
   mapQuery: string;
-  distances: { place: string; distance: string }[];
   /** PDF under /public. Absent → request over WhatsApp, or hidden if sold out. */
   catalogUrl?: string;
 }
@@ -71,11 +71,20 @@ export interface Project {
 /* Pricing                                                             */
 /* ------------------------------------------------------------------ */
 
+/** Current starting prices in lakhs, shared by the hero, tiers and catalogues. */
+export const TIER_PRICES: Record<TierKey, number> = {
+  unfurnished: 72,
+  semi: 76,
+  fully: 80,
+};
+
+export const STARTING_PRICE: Price = { min: TIER_PRICES.unfurnished };
+
 /** Lakhs added to the unfurnished price for each tier. */
 export const TIER_UPLIFT: Record<TierKey, number> = {
   unfurnished: 0,
-  semi: 5,
-  fully: 15,
+  semi: TIER_PRICES.semi - TIER_PRICES.unfurnished,
+  fully: TIER_PRICES.fully - TIER_PRICES.unfurnished,
 };
 
 export function tierPrice(base: Price, tier: TierKey): Price {
@@ -120,7 +129,7 @@ export const tiers: {
       "Flooring throughout",
       "Modular kitchen",
       "Wardrobes in all bedrooms",
-      "Lighting points and fans",
+      "Electrical and lighting points",
       "Landscaping",
     ],
   },
@@ -167,7 +176,7 @@ export const comparisonRows: {
   { feature: "Bedroom furniture", tiers: [false, true, true] },
   { feature: "Living room furniture", tiers: [false, true, true] },
   { feature: "Lighting and fans", tiers: [false, true, true] },
-  { feature: "Curtains and soft furnishing", tiers: [false, true, true] },
+  { feature: "Curtains and blinds", tiers: [false, true, true] },
   { feature: "Rugs and decor", tiers: [false, false, true] },
   { feature: "Artwork", tiers: [false, false, true] },
   { feature: "Landscaping", tiers: [true, true, true] },
@@ -332,21 +341,21 @@ const apartmentUpper: FloorPlan = {
 /* ------------------------------------------------------------------ */
 
 /**
- * The same living room in three states, used by the tier switcher.
- * Shared across projects until project-specific photography is shot.
+ * Illustrative interior references for the three levels of finish.
+ * These are not project-specific handover photographs.
  */
 const tierImages: Record<TierKey, ImageRef> = {
   unfurnished: img(
     "1630699144867-37acec97df5a",
-    "The living room unfurnished: bare timber floor, white walls and sliding doors to the garden",
+    "Unfurnished interior reference: timber floor, white walls and sliding doors",
   ),
   semi: img(
     "1616486338812-3dadae4b4ace",
-    "The same living room semi-furnished: sofa, ottoman and a side table in place",
+    "Semi-furnished interior reference: seating and essential furniture",
   ),
   fully: img(
     "1615529182904-14819c35db37",
-    "The same living room fully furnished: seating, rug, lighting, artwork and planting",
+    "Fully furnished interior reference: seating, rug, lighting, artwork and planting",
   ),
 };
 
@@ -368,7 +377,7 @@ export const projects: Project[] = [
     plotArea: "24 cents",
     builtUp: "1,100 – 1,650 sq ft",
     completion: "Register opening 2026",
-    basePrice: { min: 55 },
+    basePrice: STARTING_PRICE,
     soldOut: false,
     summary:
       "Three buildings on a narrow lane off Taqva Road, planned around the light the site already has.",
@@ -383,7 +392,7 @@ export const projects: Project[] = [
     overview: [
       "Taqva Road is a quiet lane off the main Vaduthala stretch, close enough to the market to walk and far enough back that the noise does not follow you home. The plot is narrow and deep, which rules out one large block and suggests three smaller ones instead.",
       "That is what we are building: three buildings set apart with planted gaps between them, so every apartment takes light and air from two sides rather than one. The gaps do the work that a courtyard does in an older Kerala house. Living rooms face east for the morning; kitchens and utilities take the west wall, where the afternoon heat can be absorbed by something other than a room you sit in.",
-      "Drawings are with the planning authority and we expect to open the register in 2026. Prices start at ₹55 Lakhs unfurnished. If you would like to be told when the first building is released, leave your number and we will call before anything is advertised.",
+      `Drawings are with the planning authority and we expect to open the register in 2026. Prices start at ${formatPrice(STARTING_PRICE)} unfurnished. If you would like to be told when the first building is released, leave your number and we will call before anything is advertised.`,
     ],
     gallery: [
       {
@@ -419,13 +428,6 @@ export const projects: Project[] = [
     floorPlans: { ground: apartmentGround, first: apartmentUpper },
     specs: defaultSpecs("apartment"),
     mapQuery: "Taqva Road, Vaduthala, Kochi, Kerala",
-    distances: [
-      { place: "Vaduthala Junction", distance: "0.9 km" },
-      { place: "Ernakulam North station", distance: "4.4 km" },
-      { place: "Lulu Mall, Edappally", distance: "5.3 km" },
-      { place: "Infopark, Kakkanad", distance: "12 km" },
-      { place: "Cochin International Airport", distance: "27 km" },
-    ],
     catalogUrl: "/catalogs/taqva-road-vaduthala.pdf",
   },
   {
@@ -441,7 +443,7 @@ export const projects: Project[] = [
     plotArea: "32 cents",
     builtUp: "1,750 – 2,300 sq ft",
     completion: "Phased through 2026",
-    basePrice: { min: 70 },
+    basePrice: STARTING_PRICE,
     soldOut: false,
     summary:
       "Eight villas along Mirzad Road, built in phases. Two are finished and lived in; six follow.",
@@ -450,7 +452,7 @@ export const projects: Project[] = [
     overview: [
       "Mirzad Road runs along a slight ridge, which is unusual enough in this part of Kochi to be worth designing around. The land falls away to the south, so we set the villas along the high edge and let their gardens step down behind them.",
       "Each villa turns its back on the road and opens south into its own garden. A veranda runs the full width of that south face, deep enough to keep the monsoon off an open door and to be usable as a room for the four months when sitting outside is the only sensible thing to do. Upstairs, the bedrooms take the same orientation, with louvred shutters on the west so the evening breeze comes through without the evening sun.",
-      "Two villas are complete and occupied. The remaining six are under construction and will be handed over in phases through 2026. Prices start at ₹70 Lakhs unfurnished, and all three levels of finish are available on the six still to come.",
+      `Two villas are complete and occupied. The remaining six are under construction and will be handed over in phases through 2026. Prices start at ${formatPrice(STARTING_PRICE)} unfurnished, and all three levels of finish are available on the six still to come.`,
     ],
     gallery: [
       { image: img("/images/projects/mirzad-road/01-ground-floor-living-unfurnished.webp", "Mirzad Road: Ground Floor Living Unfurnished"), caption: "Ground Floor Living Unfurnished", layout: "half" },
@@ -471,13 +473,6 @@ export const projects: Project[] = [
     floorPlans: { ground: villaGround, first: villaFirst },
     specs: defaultSpecs("villa"),
     mapQuery: "Mirzad Road, Kochi, Kerala",
-    distances: [
-      { place: "Vaduthala Junction", distance: "2.4 km" },
-      { place: "Ernakulam North station", distance: "3.8 km" },
-      { place: "Lulu Mall, Edappally", distance: "6.2 km" },
-      { place: "Infopark, Kakkanad", distance: "11.5 km" },
-      { place: "Cochin International Airport", distance: "28 km" },
-    ],
     catalogUrl: "/catalogs/mirzad-road.pdf",
   },
   {
@@ -515,13 +510,7 @@ export const projects: Project[] = [
     floorPlans: { ground: villaGround, first: villaFirst },
     specs: defaultSpecs("villa"),
     mapQuery: "Kochi, Kerala",
-    distances: [
-      { place: "Ernakulam South station", distance: "3.4 km" },
-      { place: "Marine Drive", distance: "4.1 km" },
-      { place: "Lulu Mall, Edappally", distance: "7.8 km" },
-      { place: "Infopark, Kakkanad", distance: "13 km" },
-      { place: "Cochin International Airport", distance: "30 km" },
-    ],
+    catalogUrl: "/catalogs/1008.pdf",
   },
   {
     slug: "perumbavoor",
@@ -590,13 +579,6 @@ export const projects: Project[] = [
     floorPlans: { ground: apartmentGround, first: apartmentUpper },
     specs: defaultSpecs("apartment"),
     mapQuery: "Perumbavoor, Ernakulam, Kerala",
-    distances: [
-      { place: "Perumbavoor town centre", distance: "1.3 km" },
-      { place: "Aluva railway station", distance: "16 km" },
-      { place: "Cochin International Airport", distance: "21 km" },
-      { place: "Infopark, Kakkanad", distance: "26 km" },
-      { place: "Ernakulam North station", distance: "31 km" },
-    ],
   },
   {
     slug: "vaduthala-salafi",
@@ -656,13 +638,6 @@ export const projects: Project[] = [
     floorPlans: { ground: villaGround, first: villaFirst },
     specs: defaultSpecs("villa"),
     mapQuery: "Vaduthala, Kochi, Kerala",
-    distances: [
-      { place: "Vaduthala Junction", distance: "0.6 km" },
-      { place: "Ernakulam North station", distance: "4.0 km" },
-      { place: "Lulu Mall, Edappally", distance: "5.0 km" },
-      { place: "Infopark, Kakkanad", distance: "12 km" },
-      { place: "Cochin International Airport", distance: "27 km" },
-    ],
   },
   {
     slug: "nettoor-residences",
@@ -738,13 +713,6 @@ export const projects: Project[] = [
     floorPlans: { ground: villaGround, first: villaFirst },
     specs: defaultSpecs("villa"),
     mapQuery: "Nettoor, Kochi, Kerala",
-    distances: [
-      { place: "Kundannoor Junction", distance: "2.1 km" },
-      { place: "Lulu Mall, Edappally", distance: "9.4 km" },
-      { place: "Infopark, Kakkanad", distance: "13 km" },
-      { place: "Ernakulam South station", distance: "7.6 km" },
-      { place: "Cochin International Airport", distance: "38 km" },
-    ],
     catalogUrl: "/catalogs/nettoor-residences.pdf",
   },
 ];

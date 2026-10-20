@@ -1,15 +1,19 @@
+// Set this public value when a custom domain is connected to the deployment.
+const siteUrl = new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://cityskyy.vercel.app").origin;
+
 export const site = {
   name: "Citysky Builders",
   shortName: "Citysky",
   tagline: "Homes built to belong.",
   description:
     "Citysky Builders is a Kochi-based property developer designing and building considered homes in Nettoor and Vaduthala, Kerala.",
-  url: "https://cityskybuilders.in",
-  domain: "cityskybuilders.in",
-  phone: "+91 89438 18733",
-  phoneHref: "tel:+918943818733",
-  whatsappNumber: "918943818733",
-  email: "hello@cityskybuilders.in",
+  url: siteUrl,
+  domain: new URL(siteUrl).host,
+  phone: "+91 73067 91919",
+  phoneHref: "tel:+917306791919",
+  whatsappNumber: "917306791919",
+  email: "cityskyhomes@gmail.com",
+  mapsUrl: "https://maps.app.goo.gl/KxJBkaBbWskFjQR9A",
   address: {
     line1: "Citysky Builders",
     line2: "Vaduthala, Kochi",

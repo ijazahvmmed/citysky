@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { formatPrice, STARTING_PRICE } from "@/lib/data/projects";
 import { useNavInverse } from "@/components/layout/NavTheme";
 import { TransitionLink } from "@/components/layout/TransitionLink";
 import styles from "./Hero.module.css";
@@ -35,7 +36,7 @@ export function Hero() {
         <h1 id="hero-title" className={styles.title}>Citysky</h1>
         <nav className={styles.heroActions} aria-label="Find your home">
           <TransitionLink href="/contact" className={styles.priceAction}>
-            <span>Starting from</span><strong>₹55 lakhs</strong>
+            <span>Starting from</span><strong>{formatPrice(STARTING_PRICE)}</strong>
           </TransitionLink>
           <TransitionLink href="/projects" className={styles.exploreAction}>
             <span>Find your home</span><strong>Explore projects ↗</strong>

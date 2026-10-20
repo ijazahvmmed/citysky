@@ -14,6 +14,11 @@
 .canvas:active { cursor: grabbing; }
 .canvas:focus-visible { outline-offset: -4px; }
 .canvas canvas { width: 100%; height: 100%; display: block; }
+.viewControls { position: absolute; z-index: 2; top: 0.5rem; right: 0.75rem; display: flex; border: 1px solid var(--border-strong); border-radius: 100px; background: rgb(250 250 248 / 85%); backdrop-filter: blur(12px); }
+.viewControls button { width: 44px; height: 44px; border-radius: 100px; font-size: 1.15rem; line-height: 1; transition: background-color 180ms ease; }
+.viewControls button:hover { background: var(--accent-tint); }
+.viewControls button:focus-visible { outline-offset: -4px; }
+.mobileStage .stageCount { font-size: 0.625rem; color: var(--text-secondary); font-variant-numeric: tabular-nums; }
 .viewHint { position: absolute; bottom: 0.5rem; left: 0; width: 100%; text-align: center; font-size: 0.625rem; color: var(--text-secondary); pointer-events: none; transition: opacity 0.7s ease; }
 .canvas[data-inspected="true"] ~ .viewHint { opacity: 0; }
 .canvas:focus-visible ~ .viewHint { opacity: 1; }
@@ -63,6 +68,8 @@
 .enquiryFields .studyNote a { text-decoration: underline; text-underline-offset: 3px; }
 
 @media (min-width: 1024px) {
+  .stageRow { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 0.5rem; padding-bottom: 0.5rem; }
+  .mobileStage { display: none; }
   .experienceInner { grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.8fr); grid-template-rows: minmax(0, 1fr) auto; row-gap: 0.75rem; padding-top: max(5rem, 10vh); padding-bottom: 5rem; }
   .sceneArea { display: flex; flex-direction: column; gap: 0.75rem; }
   .sceneCaption { position: static; flex-shrink: 0; }
@@ -109,8 +116,7 @@
   .viewport { min-height: 210px; }
   .sceneArea { margin-inline: calc(-1 * var(--gutter)); }
   .sequenceBottom { display: block; }
-  .sequenceBottom p { display: none; }
-  .sequenceBottom p.finalLine { display: block; font-size: 0.6875rem; max-width: none; margin-bottom: 0.25rem; }
+  .sequenceBottom p, .sequenceBottom p.finalLine { display: block; font-size: 0.6875rem; line-height: 1.4; min-height: 2.8em; max-width: 40ch; margin-bottom: 0.25rem; }
   .sequenceBottom a { font-size: 0.8125rem; min-height: 36px; }
   .completionGrid, .enquiryGrid { grid-template-columns: 1fr; gap: 2.25rem; }
   .completionVisual { height: auto; aspect-ratio: 1; grid-row: 2; }

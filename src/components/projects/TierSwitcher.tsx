@@ -16,14 +16,20 @@ import { RevealText } from "@/components/motion/RevealText";
 import styles from "./TierSwitcher.module.css";
 
 const order: TierKey[] = ["unfurnished", "semi", "fully"];
+const finishLabels: Record<TierKey, string> = {
+  unfurnished: "Finished home",
+  semi: "Furniture essentials",
+  fully: "Furniture + décor",
+};
 
 /**
- * The same room in three states. Crossfade 400ms, default Fully Furnished,
+ * Illustrative rooms for three finish levels. Crossfade 400ms, default Fully Furnished,
  * all three images eager-loaded, swipeable on touch.
  */
 export function TierSwitcher({ project }: { project: Project }) {
   const [tier, setTier] = useState<TierKey>("fully");
-  const touchX = useRef<number | null>(null);
+  const touch = useRef<{ x: number; y: number } | null>(null);
+  const controls = useRef<HTMLDivElement>(null);
 
   const select = (next: TierKey) => {
     if (next === tier) return;
@@ -38,24 +44,28 @@ export function TierSwitcher({ project }: { project: Project }) {
   };
 
   const onTouchStart = (e: TouchEvent) => {
-    touchX.current = e.touches[0].clientX;
+    touch.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
   };
   const onTouchEnd = (e: TouchEvent) => {
-    if (touchX.current === null) return;
-    const dx = e.changedTouches[0].clientX - touchX.current;
-    touchX.current = null;
-    if (Math.abs(dx) < 40) return;
+    if (touch.current === null) return;
+    const dx = e.changedTouches[0].clientX - touch.current.x;
+    const dy = e.changedTouches[0].clientY - touch.current.y;
+    touch.current = null;
+    if (Math.abs(dx) < 40 || Math.abs(dx) <= Math.abs(dy)) return;
     step(dx < 0 ? 1 : -1);
   };
 
   const onKey = (e: KeyboardEvent) => {
-    if (e.key === "ArrowRight") {
-      e.preventDefault();
-      step(1);
-    } else if (e.key === "ArrowLeft") {
-      e.preventDefault();
-      step(-1);
-    }
+    const index = order.indexOf(tier);
+    let next: number;
+    if (e.key === "ArrowRight" || e.key === "ArrowDown") next = (index + 1) % order.length;
+    else if (e.key === "ArrowLeft" || e.key === "ArrowUp") next = (index + order.length - 1) % order.length;
+    else if (e.key === "Home") next = 0;
+    else if (e.key === "End") next = order.length - 1;
+    else return;
+    e.preventDefault();
+    select(order[next]);
+    controls.current?.querySelectorAll<HTMLButtonElement>("button")[next]?.focus();
   };
 
   const current = tiers.find((t) => t.key === tier)!;
@@ -68,78 +78,99 @@ export function TierSwitcher({ project }: { project: Project }) {
     >
       <div className="container">
         <div className={styles.head}>
-          <p className="eyebrow">See the difference</p>
+          <p className="eyebrow">Finish visualisation</p>
           <RevealText
             as="h2"
             className={`h-section ${styles.title}`}
             id="switcher-heading"
           >
-            The same room, three ways.
+            See each level of finish.
           </RevealText>
           <p className={`body muted ${styles.lead}`}>
-            {project.soldOut
-              ? `Select a tier to see how a living room at ${project.name} was handed over. Swipe on a phone.`
-              : `Select a tier to see how the living room at ${project.name} arrives on handover day. Swipe on a phone.`}
+            Tap a finish to compare the furniture and styling. These illustrative
+            rooms show the difference between the three options.
           </p>
         </div>
 
-        <div
-          className={styles.stage}
-          onTouchStart={onTouchStart}
-          onTouchEnd={onTouchEnd}
-          data-cursor="Drag"
-        >
-          {order.map((k) => {
-            const image = tierImages[k];
-            const on = k === tier;
-            return (
-              <div
-                key={k}
-                className={cx(styles.layer, on && styles.layerOn)}
-                aria-hidden={!on}
+        <div className={styles.preview}>
+          <div
+            className={styles.stage}
+            onTouchStart={onTouchStart}
+            onTouchEnd={onTouchEnd}
+            onTouchCancel={() => { touch.current = null; }}
+            data-cursor="Drag"
+          >
+            {order.map((k) => {
+              const image = tierImages[k];
+              const on = k === tier;
+              return (
+                <div
+                  key={k}
+                  className={cx(styles.layer, on && styles.layerOn)}
+                  aria-hidden={!on}
+                >
+                  <Image
+                    src={imageSrc(image, 2000)}
+                    alt={`${tiers.find(t => t.key === k)?.name} living room finish visualisation`}
+                    fill
+                    loading="eager"
+                    sizes="(min-width: 1440px) 1300px, 92vw"
+                    placeholder={imageBlur(image) ? "blur" : "empty"}
+                    blurDataURL={imageBlur(image)}
+                    style={{ objectFit: "cover" }}
+                  />
+                </div>
+              );
+            })}
+            <div className={styles.stageCaption} aria-live="polite">
+              <span className={styles.stageNumeral}>{current.numeral}</span>
+              <span className={styles.stageName}>{current.name}</span>
+              {price && <span className={styles.stagePrice}>From {price}</span>}
+            </div>
+          </div>
+
+          <div
+            ref={controls}
+            className={styles.controls}
+            role="group"
+            aria-label="Choose a finish to preview"
+            onKeyDown={onKey}
+          >
+            {tiers.map((t) => (
+              <button
+                key={t.key}
+                type="button"
+                className={cx(styles.control, tier === t.key && styles.controlOn)}
+                aria-pressed={tier === t.key}
+                onClick={() => select(t.key)}
               >
-                <Image
-                  src={imageSrc(image, 2000)}
-                  alt={image.alt}
-                  fill
-                  loading="eager"
-                  sizes="(min-width: 1440px) 1300px, 92vw"
-                  placeholder={imageBlur(image) ? "blur" : "empty"}
-                  blurDataURL={imageBlur(image)}
-                  style={{ objectFit: "cover" }}
-                />
-              </div>
-            );
-          })}
-          <div className={styles.stageCaption} aria-live="polite">
-            <span className={styles.stageNumeral}>{current.numeral}</span>
-            <span className={styles.stageName}>{current.name}</span>
-            {price && <span className={styles.stagePrice}>{price}</span>}
+                <span className={styles.controlNumeral}>{t.numeral}</span>
+                <span className={styles.controlText}>
+                  <span className={styles.controlName}>{t.name}</span>
+                  <span className={styles.controlDescription}>{finishLabels[t.key]}</span>
+                </span>
+                {!project.soldOut && (
+                  <span className={styles.controlPrice}>
+                    <span>From</span>
+                    {tierPriceLabel(project, t.key)}
+                  </span>
+                )}
+                <span className={styles.selectionMark} aria-hidden="true">
+                  {tier === t.key ? "✓" : ""}
+                </span>
+                <span className={styles.controlLine} aria-hidden="true" />
+              </button>
+            ))}
+          </div>
+
+          <div className={styles.selectionDetail} aria-live="polite" aria-atomic="true">
+            <p className={styles.detailName}>{current.name}</p>
+            <p className={`small muted ${styles.note}`}>{current.tagline}</p>
           </div>
         </div>
-
-        <div
-          className={styles.controls}
-          role="group"
-          aria-label="Select tier"
-          onKeyDown={onKey}
-        >
-          {tiers.map((t) => (
-            <button
-              key={t.key}
-              type="button"
-              className={cx(styles.control, tier === t.key && styles.controlOn)}
-              aria-pressed={tier === t.key}
-              onClick={() => select(t.key)}
-            >
-              <span className={styles.controlNumeral}>{t.numeral}</span>
-              <span className={styles.controlName}>{t.name}</span>
-              <span className={styles.controlLine} aria-hidden="true" />
-            </button>
-          ))}
-        </div>
-
-        <p className={`small muted ${styles.note}`}>{current.tagline}</p>
+        <p className={styles.visualNote}>
+          Illustrative interiors. Layout, materials and furnishing schedules vary by home.
+        </p>
       </div>
     </section>
   );

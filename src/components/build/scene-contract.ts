@@ -4,6 +4,8 @@ export type Completion = "canvas" | "essentials" | "pinnacle";
 export interface BuildingScene {
   setProgress: (progress: number) => void;
   setCompletion: (completion: Completion | null) => void;
+  zoomBy: (direction: 1 | -1) => void;
+  resetView: () => void;
   dispose: () => void;
 }
 

@@ -34,6 +34,11 @@
   touch-action: pan-y;
 }
 
+.preview {
+  display: flex;
+  flex-direction: column;
+}
+
 .layer {
   position: absolute;
   inset: 0;
@@ -88,8 +93,8 @@
   position: relative;
   display: flex;
   align-items: baseline;
-  gap: 1rem;
-  padding: 1.25rem 0;
+  gap: 0.75rem;
+  padding: 1.25rem 0.75rem 1.25rem 0;
   text-align: left;
   color: var(--text-secondary);
   transition: color 0.4s var(--ease-out);
@@ -111,8 +116,39 @@
 .controlName {
   font-size: var(--fs-label);
   font-weight: 500;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  font-size: 0.9375rem;
+}
+
+.controlText {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.controlDescription {
+  font-size: 0.75rem;
+  line-height: 1.35;
+  color: var(--text-secondary);
+}
+
+.controlPrice {
+  display: grid;
+  gap: 0.2rem;
+  margin-left: auto;
+  white-space: nowrap;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.controlPrice > span {
+  font-size: 0.625rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+
+.selectionMark {
+  display: none;
 }
 
 .controlLine {
@@ -139,10 +175,23 @@
 }
 
 .note {
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.selectionDetail {
+  margin-top: 0.75rem;
+}
+
+.detailName {
+  display: none;
+}
+
+.visualNote {
   margin-top: 1rem;
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: 1.125rem;
+  color: var(--text-secondary);
+  font-size: 0.6875rem;
+  line-height: 1.5;
 }
 
 @media (max-width: 899px) {
@@ -153,6 +202,7 @@
 
   .stage {
     aspect-ratio: 4 / 3;
+    order: 2;
   }
 
   .stageCaption {
@@ -168,12 +218,94 @@
 
   .controls {
     grid-template-columns: 1fr;
-    margin-top: 0.5rem;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    gap: 0.5rem;
+    order: 1;
   }
 
   .control {
-    padding: 0.9rem 0;
+    padding: 0.8rem 0.875rem;
+    align-items: center;
+    border: 1px solid var(--border-strong);
+    gap: 0.6rem;
+    min-height: 66px;
+  }
+
+  .controlOn {
+    background: var(--accent-tint);
+    border-color: #528b83;
+  }
+
+  .controlNumeral,
+  .controlLine {
+    display: none;
+  }
+
+  .controlName {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    line-height: 1.2;
+  }
+
+  .controlDescription {
+    font-size: 0.6875rem;
+  }
+
+  .controlPrice {
+    font-size: 0.875rem;
+    text-align: right;
+  }
+
+  .selectionMark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border-strong);
+    border-radius: 50%;
+    height: 17px;
+    width: 17px;
+    flex: none;
+    font-size: 0.6875rem;
+  }
+
+  .controlOn .selectionMark {
+    color: white;
+    background: #28655e;
+    border-color: #28655e;
+  }
+
+  .selectionDetail {
+    order: 3;
+    padding-top: 0.875rem;
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .detailName {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .note {
+    font-size: 0.8125rem;
+  }
+
+  .stageCaption {
+    max-width: calc(100% - 2rem);
+  }
+
+  .stageName {
+    font-size: 0.6875rem;
+    letter-spacing: 0.06em;
   }
 }
 
 @media (max-width: 600px) { .stageNumeral, .stagePrice, .controlNumeral { font-size: 1.1rem; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .layer, .control, .controlLine::after {
+    transition: none;
+  }
+}

@@ -8,6 +8,7 @@ import { Nav } from "@/components/layout/Nav";
 import { Footer } from "@/components/layout/Footer";
 import { Cursor } from "@/components/layout/Cursor";
 import { FloatingContact } from "@/components/layout/FloatingContact";
+import { SiteAnalytics } from "@/components/analytics/SiteAnalytics";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -15,16 +16,8 @@ const dmSans = DM_Sans({
   display: "swap",
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
-  ? process.env.NEXT_PUBLIC_SITE_URL
-  : process.env.VERCEL_PROJECT_PRODUCTION_URL
-  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-  : process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : site.url;
-
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: new URL(site.url),
   title: {
     default: `${site.name} — ${site.tagline} Kochi, Kerala`,
     template: `%s — ${site.name}`,
@@ -72,6 +65,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
+      data-scroll-behavior="smooth"
       className={dmSans.variable}
       suppressHydrationWarning
     >
@@ -94,6 +88,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </NavThemeProvider>
         <Cursor />
         <FloatingContact />
+        <SiteAnalytics />
       </body>
     </html>
   );

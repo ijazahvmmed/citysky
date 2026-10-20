@@ -34,6 +34,7 @@
 }
 
 .open {
+  z-index: 70;
   color: var(--text-inverse);
   background: transparent;
   border-bottom-color: var(--border-inverse);
@@ -188,7 +189,24 @@
 }
 
 .menuLabel {
+  display: inline-block;
   transition: transform 0.4s var(--ease-out);
+}
+
+.menuLink[aria-current="page"] .menuIndex {
+  color: var(--accent);
+  opacity: 1;
+}
+
+.menuLink[aria-current="page"] .menuLabel::after {
+  content: "";
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  margin-left: 0.65rem;
+  border-radius: 50%;
+  background: var(--accent);
+  vertical-align: middle;
 }
 
 .menuLink:hover .menuLabel {
@@ -243,5 +261,11 @@
   .menuFoot {
     grid-template-columns: 1fr;
     gap: 1.15rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menuLabel {
+    transition: none;
   }
 }

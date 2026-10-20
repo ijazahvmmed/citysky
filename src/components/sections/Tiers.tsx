@@ -4,8 +4,11 @@ import { usePathname } from "next/navigation";
 import {
   tiers,
   tierPriceLabel,
+  formatPrice,
+  TIER_PRICES,
   TIER_UPLIFT,
   type Project,
+  type TierKey,
 } from "@/lib/data/projects";
 import { whatsappLink } from "@/lib/whatsapp";
 import { track } from "@/lib/analytics";
@@ -13,6 +16,12 @@ import { cx } from "@/lib/cx";
 import { RevealText } from "@/components/motion/RevealText";
 import { ArrowLink } from "@/components/ui/ArrowLink";
 import styles from "./Tiers.module.css";
+
+const finishSummary: Record<TierKey, string> = {
+  unfurnished: "A finished home to furnish your way",
+  semi: "Furniture and everyday essentials",
+  fully: "Furniture, décor and finishing touches",
+};
 
 interface Props {
   /** Project-specific pricing and CTAs; omit on the home page. */
@@ -32,8 +41,8 @@ export function Tiers({
   const soldOut = project?.soldOut ?? false;
   // Sold-out pages keep this section as an explanation of how homes are
   // delivered, so no prices and no enquiry links for that project.
-  const showPrices = Boolean(project) && !soldOut;
-  const showEnquiry = showPrices;
+  const showPrices = !soldOut;
+  const showEnquiry = Boolean(project) && !soldOut;
 
   return (
     <section
@@ -55,7 +64,7 @@ export function Tiers({
             className={`h-section ${styles.title}`}
             id={`${id}-heading`}
           >
-            Every home, finished to the degree you choose.
+            Choose your level of finish.
           </RevealText>
           <p className={`body muted ${styles.lead}`}>
             {soldOut
@@ -67,28 +76,41 @@ export function Tiers({
         <div className={styles.columns}>
           {tiers.map((t) => {
             const featured = t.key === "fully";
-            const price = project ? tierPriceLabel(project, t.key) : null;
+            const price = project
+              ? tierPriceLabel(project, t.key)
+              : formatPrice({ min: TIER_PRICES[t.key] });
             return (
               <article
                 key={t.key}
                 className={cx(styles.col, featured && styles.featured)}
                 data-enter
               >
-                {featured && <span className={styles.most}>Most chosen</span>}
-                <span className={styles.numeral} aria-hidden="true">
-                  {t.numeral}
-                </span>
-                <h3 className={styles.name}>{t.name}</h3>
-                <p className={styles.tagline}>{t.tagline}</p>
-                <p className={`small muted ${styles.copy}`}>{t.copy}</p>
+                <div className={styles.cardHeading}>
+                  <span className={styles.numeral} aria-hidden="true">
+                    {t.numeral}
+                  </span>
+                  {featured && <span className={styles.most}>Complete package</span>}
+                </div>
+                <div className={styles.identity}>
+                  <h3 className={styles.name}>{t.name}</h3>
+                  <p className={styles.tagline}>{finishSummary[t.key]}</p>
+                </div>
 
                 {showPrices && price && (
-                  <p className={styles.price}>
-                    <span className="label muted">
-                      {project?.basePrice.max === undefined ? "From" : "Range"}
-                    </span>
-                    <span className={styles.priceValue}>{price}</span>
-                  </p>
+                  <div className={styles.priceBlock}>
+                    <p className={styles.price}>
+                      <span className={styles.priceLabel}>
+                        {project?.basePrice.max === undefined ? "Starting from" : "Price range"}
+                      </span>
+                      <span className={styles.priceValue}>{price}</span>
+                    </p>
+                    {t.key !== "unfurnished" && (
+                      <p className={styles.upgrade}>
+                        +₹{t.key === "semi" ? TIER_UPLIFT.semi : TIER_UPLIFT.fully - TIER_UPLIFT.semi} Lakhs
+                        {" "}over {t.key === "semi" ? "Unfurnished" : "Semi-Furnished"}
+                      </p>
+                    )}
+                  </div>
                 )}
                 {soldOut && (
                   <p className={styles.price}>
@@ -96,6 +118,11 @@ export function Tiers({
                   </p>
                 )}
 
+                <p className={`small muted ${styles.copy}`}>{t.copy}</p>
+
+                <p className={styles.includesLabel}>
+                  {t.key === "unfurnished" ? "Included in every home" : "What this adds"}
+                </p>
                 <ul className={styles.includes}>
                   {t.includes.map((item) => (
                     <li key={item}>{item}</li>
@@ -117,7 +144,7 @@ export function Tiers({
                       })
                     }
                   >
-                    Enquire, {t.name}
+                    Ask about this finish
                   </ArrowLink>
                 )}
               </article>
@@ -127,8 +154,8 @@ export function Tiers({
 
         {showPrices && (
           <p className={`small muted ${styles.upliftNote}`}>
-            Semi-Furnished adds ₹{TIER_UPLIFT.semi} Lakhs to the unfurnished
-            price; Fully Furnished adds ₹{TIER_UPLIFT.fully} Lakhs.
+            Each option includes the previous level. Starting prices vary by
+            project and home; the final furnishing schedule is shared at enquiry.
           </p>
         )}
 

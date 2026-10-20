@@ -18,6 +18,12 @@
   pointer-events: none;
 }
 
+.scene > picture {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
 .image {
   object-fit: cover;
 }

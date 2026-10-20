@@ -196,16 +196,26 @@ export function createBuildingScene(host: HTMLElement, onFailure: () => void): B
         event.preventDefault();
         inspect();
         if (event.key === "Home") {
-            targetYaw = Math.round(targetYaw / (Math.PI * 2)) * Math.PI * 2;
-            targetPitch = 0;
-            targetZoom = 1;
+            resetView();
         }
         if (event.key === "ArrowLeft" || event.key === "ArrowRight")
             targetYaw += degrees(event.key === "ArrowLeft" ? -15 : 15);
         if (event.key === "ArrowUp" || event.key === "ArrowDown")
             targetPitch = THREE.MathUtils.clamp(targetPitch + degrees(event.key === "ArrowUp" ? 4 : -4), degrees(-22), degrees(30));
         if (["+", "=", "-"].includes(event.key))
-            targetZoom = THREE.MathUtils.clamp(targetZoom * (event.key === "-" ? 1.08 : 1 / 1.08), .9, 1.22);
+            zoomBy(event.key === "-" ? -1 : 1);
+        requestRender();
+    }
+    function zoomBy(direction: 1 | -1) {
+        inspect();
+        targetZoom = THREE.MathUtils.clamp(targetZoom * (direction === 1 ? 1 / 1.08 : 1.08), .9, 1.22);
+        requestRender();
+    }
+    function resetView() {
+        inspect();
+        targetYaw = Math.round(targetYaw / (Math.PI * 2)) * Math.PI * 2;
+        targetPitch = 0;
+        targetZoom = 1;
         requestRender();
     }
     function wheel(event: WheelEvent) {
@@ -270,6 +280,8 @@ export function createBuildingScene(host: HTMLElement, onFailure: () => void): B
     document.addEventListener("visibilitychange", visibilityChange);
     resize();
     return {
+        zoomBy,
+        resetView,
         setProgress(value) { progress = THREE.MathUtils.clamp(value, 0, 1); dirty = true; requestRender(); },
         setCompletion(value) { const first = completion === null; completion = value; finishTarget = value === "pinnacle" ? 1 : value === "essentials" ? .5 : 0; if (first || reduced)
             finish = finishTarget; dirty = true; requestRender(); },

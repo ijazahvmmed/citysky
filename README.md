@@ -1,36 +1,42 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Citysky
 
-## Getting Started
+Next.js App Router website with React, CSS Modules, GSAP and a lazy-loaded Three.js architectural viewer.
 
-First, run the development server:
+## Local development
 
 ```bash
+npm ci
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000. Validate with `npm run lint`, `npx tsc --noEmit` and `npm run build`; serve the production build with `npm start`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Read the installed Next.js guides in `node_modules/next/dist/docs/` before changing framework-specific code.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Shared content
 
-## Learn More
+- `src/lib/site.ts`: contact details, navigation, supplied Maps link and canonical site URL.
+- `src/lib/data/projects.ts`: projects, galleries and furnishing options. `TIER_PRICES` defines the 72/76/80 lakh starting prices; available projects and hero pricing use the same source.
+- `src/components/build/`: scroll-driven construction stages, finish selection and 3D camera interaction. The viewer supports drag, keyboard rotation, zoom/reset buttons, reduced motion and a static fallback.
 
-To learn more about Next.js, take a look at the following resources:
+Set `NEXT_PUBLIC_SITE_URL` before building when connecting a custom domain. The default is `https://cityskyy.vercel.app`, matching the supplied Vercel project screenshot. Metadata, sitemap and public links share this value. See `.env.example`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Project catalogues
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Published PDFs are in `public/catalogs/`. Regenerate after changing prices, images or contact details:
 
-## Deploy on Vercel
+```bash
+python scripts/generate-catalogues.py
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Requires Python 3, ReportLab, Pillow, Node and the installed repository dependencies. The generator also updates page counts and file sizes used by the download UI. See [scripts/README.md](scripts/README.md) for content and review requirements.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Analytics
+
+`@vercel/analytics/next` is mounted once in the root layout through `SiteAnalytics`. Page views and existing project, furnishing, catalogue and contact interactions are connected to Vercel Web Analytics.
+
+Enable Web Analytics for the Vercel project and deploy this version to collect production traffic. Local development uses the SDK's debug mode. Page URLs have their query strings and fragments removed; form values, names, phone numbers and email addresses are not sent as event properties. Custom-event availability depends on the Vercel plan.
+
+## Location data
+
+The supplied Maps short link is used for map actions. Embedded maps are explicitly neighbourhood references. Numerical distances have been removed until exact project entrances and driving routes are verified; a neighbourhood search or an unidentified short link is not enough to establish them.

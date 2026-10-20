@@ -1,10 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, type MouseEvent } from "react";
 import { usePathname } from "next/navigation";
 import { site } from "@/lib/site";
 import { whatsappLink } from "@/lib/whatsapp";
 import { track } from "@/lib/analytics";
+import { gsap, MOTION_OK } from "@/lib/gsap";
+import { useIsomorphicLayoutEffect } from "@/lib/useIsomorphicLayoutEffect";
 import Image from "next/image";
 import { useNavTheme } from "./NavTheme";
 import { TransitionLink } from "./TransitionLink";
@@ -18,12 +20,25 @@ export function Nav() {
   const pathname = usePathname();
   const [hidden, setHidden] = useState(false);
   const [solid, setSolid] = useState(false);
-  // Menu is "open" only for the pathname it was opened on, so a route change closes it.
-  const [openOn, setOpenOn] = useState<string | null>(null);
-  const open = openOn === pathname;
-  const setOpen = (v: boolean | ((prev: boolean) => boolean)) => {
-    const next = typeof v === "function" ? v(open) : v;
-    setOpenOn(next ? pathname : null);
+  const header = useRef<HTMLElement>(null);
+  const menu = useRef<HTMLDivElement>(null);
+  const toggle = useRef<HTMLButtonElement>(null);
+  const [menuState, setMenuState] = useState({ pathname, open: false });
+  // Reset the stored state as well as the visible state, so browser Back
+  // cannot reopen a menu that belonged to a previous route.
+  if (menuState.pathname !== pathname) {
+    setMenuState({ pathname, open: false });
+  }
+  const open = menuState.pathname === pathname && menuState.open;
+  const closeMenu = (restoreFocus = true) => {
+    setMenuState({ pathname, open: false });
+    if (restoreFocus) toggle.current?.focus({ preventScroll: true });
+  };
+  const onMenuNavigate = (event: MouseEvent<HTMLAnchorElement>) => {
+    if (!open) return;
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+    // Close before the page-transition animation, including current-page links.
+    closeMenu(new URL(event.currentTarget.href).pathname === pathname);
   };
 
   useEffect(() => {
@@ -46,19 +61,65 @@ export function Nav() {
   }, []);
 
   useEffect(() => {
-    document.documentElement.style.overflow = open ? "hidden" : "";
+    if (!open) return;
+    const previousOverflow = document.documentElement.style.overflow;
+    const background = Array.from(document.body.children)
+      .filter((el): el is HTMLElement => el instanceof HTMLElement && !el.contains(header.current))
+      .map(el => ({ el, inert: el.inert }));
+    background.forEach(({ el }) => { el.inert = true; });
+    document.documentElement.style.overflow = "hidden";
+    menu.current?.querySelector<HTMLAnchorElement>("a")?.focus({ preventScroll: true });
     return () => {
-      document.documentElement.style.overflow = "";
+      document.documentElement.style.overflow = previousOverflow;
+      background.forEach(({ el, inert }) => { el.inert = inert; });
     };
   }, [open]);
 
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpenOn(null);
+      if (e.key === "Escape") {
+        e.preventDefault();
+        setMenuState({ pathname, open: false });
+        toggle.current?.focus({ preventScroll: true });
+      }
+      if (e.key !== "Tab") return;
+      const focusable = Array.from(
+        header.current?.querySelectorAll<HTMLElement>("a[href], button:not([disabled])") ?? [],
+      ).filter(el => el.getClientRects().length > 0);
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last?.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first?.focus();
+      }
+    };
+    const desktop = window.matchMedia("(min-width: 900px)");
+    const onResize = () => {
+      if (desktop.matches) setMenuState({ pathname, open: false });
     };
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    desktop.addEventListener("change", onResize);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      desktop.removeEventListener("change", onResize);
+    };
+  }, [open, pathname]);
+
+  useIsomorphicLayoutEffect(() => {
+    if (!open || !menu.current) return;
+    const mm = gsap.matchMedia();
+    mm.add(MOTION_OK, () => {
+      gsap.fromTo(
+        menu.current!.querySelectorAll("[data-menu-text]"),
+        { y: 12, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.45, stagger: 0.045, ease: "power3.out", clearProps: "transform,opacity" },
+      );
+    });
+    return () => mm.revert();
   }, [open]);
 
   const isActive = (href: string) =>
@@ -66,6 +127,10 @@ export function Nav() {
 
   return (
     <header
+      ref={header}
+      role={open ? "dialog" : undefined}
+      aria-modal={open ? true : undefined}
+      aria-label={open ? "Main menu" : undefined}
       className={cx(
         styles.nav,
         hidden && !open && styles.hidden,
@@ -79,6 +144,7 @@ export function Nav() {
           href="/"
           className={styles.logo}
           aria-label="Citysky Builders, home"
+          onClick={onMenuNavigate}
         >
           <Image
             src="/images/logo.png"
@@ -117,34 +183,41 @@ export function Nav() {
             <span className={styles.ctaDot} aria-hidden />
           </a>
           <button
+            ref={toggle}
             type="button"
             className={styles.toggle}
             aria-expanded={open}
             aria-controls="site-menu"
-            onClick={() => setOpen((v) => !v)}
+            onClick={() => open ? closeMenu() : setMenuState({ pathname, open: true })}
           >
             {open ? "Close" : "Menu"}
           </button>
         </div>
       </div>
 
-      <div id="site-menu" className={styles.menu} hidden={!open}>
+      <div ref={menu} id="site-menu" className={styles.menu} hidden={!open}>
         <nav className={styles.menuLinks} aria-label="Mobile">
           {[{ label: "Home", href: "/" }, ...site.nav].map((l, i) => (
             <TransitionLink
               key={l.href}
               href={l.href}
               className={styles.menuLink}
+              aria-current={isActive(l.href) ? "page" : undefined}
+              onClick={onMenuNavigate}
             >
               <span className={styles.menuIndex}>0{i + 1}</span>
-              <span className={styles.menuLabel}>{l.label}</span>
+              <span className={styles.menuLabel} data-menu-text>{l.label}</span>
             </TransitionLink>
           ))}
         </nav>
-        <div className={styles.menuFoot}>
+        <div className={styles.menuFoot} data-menu-text>
           <div>
             <p className="label muted">Call</p>
-            <a href={site.phoneHref} className={styles.menuContact}>
+            <a
+              href={site.phoneHref}
+              className={styles.menuContact}
+              onClick={() => track({ name: "phone_click", page: pathname, section: "menu" })}
+            >
               {site.phone}
             </a>
           </div>

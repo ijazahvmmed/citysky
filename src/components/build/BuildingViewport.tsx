@@ -59,6 +59,11 @@ export const BuildingViewport = forwardRef<BuildingHandle, { completion?: Comple
     return (
       <div className={`${styles.viewport} ${className}`} data-scene-state={state}>
         <div ref={host} className={styles.canvas} hidden={state === "fallback"} tabIndex={state === "ready" ? 0 : -1} role="group" aria-label="Interactive 3D architectural model" aria-describedby={hintId} />
+        {state === "ready" && <div className={styles.viewControls} role="group" aria-label="Model camera controls">
+          <button type="button" aria-label="Zoom out" onClick={() => scene.current?.zoomBy(-1)}>−</button>
+          <button type="button" aria-label="Zoom in" onClick={() => scene.current?.zoomBy(1)}>+</button>
+          <button type="button" aria-label="Reset camera view" onClick={() => scene.current?.resetView()}>↺</button>
+        </div>}
         <span id={hintId} className={styles.viewHint}>{state === "ready" ? <>Drag to explore<span className={styles.keyboardHint}>. Arrow keys rotate and tilt. Plus and minus zoom. Home resets the view. On touch screens, swipe vertically to scroll the page.</span></> : state === "fallback" ? "Architectural elevation · 3D view unavailable" : "Preparing your architectural model"}</span>
         {state !== "ready" && <svg className={styles.fallback} viewBox="0 0 700 480" aria-hidden="true">
           <g fill="none" stroke="#8c9589" strokeWidth="1">
