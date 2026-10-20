@@ -12,6 +12,8 @@ import type { Project } from "@/lib/data/projects";
 import { useNavInverse } from "@/components/layout/NavTheme";
 import { RevealText } from "@/components/motion/RevealText";
 import { ArrowLink } from "@/components/ui/ArrowLink";
+import { Arrow } from "@/components/ui/Arrow";
+import catalogueData from "@/lib/data/catalogues.json";
 import styles from "./ProjectHero.module.css";
 import { useIsomorphicLayoutEffect } from "@/lib/useIsomorphicLayoutEffect";
 
@@ -20,6 +22,7 @@ export function ProjectHero({ project }: { project: Project }) {
   const pathname = usePathname();
   const section = useRef<HTMLElement>(null);
   const media = useRef<HTMLDivElement>(null);
+  const catalogue = catalogueData[project.slug as keyof typeof catalogueData];
 
   useIsomorphicLayoutEffect(() => {
     const s = section.current;
@@ -122,6 +125,33 @@ export function ProjectHero({ project }: { project: Project }) {
             </ArrowLink>
           )}
         </div>
+        {project.catalogUrl && (
+          <div className={styles.catalogue} aria-label={`${project.name} catalogue`}>
+            <div className={styles.catalogueActions}>
+              <a
+                href={project.catalogUrl}
+                download
+                className={styles.catalogueDownload}
+                onClick={() => track({ name: "catalog_download", project: project.name })}
+              >
+                <span>Download catalogue</span>
+                <Arrow className={styles.catalogueArrow} direction="down" />
+              </a>
+              <a
+                href={project.catalogUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.cataloguePreview}
+                aria-label={`View ${project.name} catalogue PDF in a new tab`}
+              >
+                View PDF <span aria-hidden="true">↗</span>
+              </a>
+            </div>
+            <span className={styles.catalogueMeta}>
+              {catalogue ? `${catalogue.pages} pages · ${(catalogue.bytes / 1_000_000).toFixed(1)} MB` : "Project catalogue · PDF"}
+            </span>
+          </div>
+        )}
       </div>
     </section>
   );

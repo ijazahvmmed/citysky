@@ -50,8 +50,9 @@ export interface Project {
   plotArea: string;
   builtUp: string;
   completion: string;
-  /** Unfurnished price. The other two tiers are derived from it. */
+  /** Project's unfurnished price; explicit tier prices take precedence. */
   basePrice: Price;
+  tierPrices?: Record<TierKey, Price>;
   /** Sold out: show no prices and no enquiry CTAs for this project. */
   soldOut: boolean;
   summary: string;
@@ -71,20 +72,22 @@ export interface Project {
 /* Pricing                                                             */
 /* ------------------------------------------------------------------ */
 
-/** Current starting prices in lakhs, shared by the hero, tiers and catalogues. */
-export const TIER_PRICES: Record<TierKey, number> = {
-  unfurnished: 72,
-  semi: 76,
-  fully: 80,
+/** Homepage campaign price, independent of individual project quotations. */
+export const STARTING_PRICE: Price = { min: 65 };
+
+const TAQVA_STARTING_PRICE: Price = { min: 55 };
+
+const MIRZAD_TIER_PRICES: Record<TierKey, Price> = {
+  unfurnished: { min: 72 },
+  semi: { min: 76 },
+  fully: { min: 80 },
 };
 
-export const STARTING_PRICE: Price = { min: TIER_PRICES.unfurnished };
-
-/** Lakhs added to the unfurnished price for each tier. */
+/** Existing tier increments for projects without their own finish quotation. */
 export const TIER_UPLIFT: Record<TierKey, number> = {
   unfurnished: 0,
-  semi: TIER_PRICES.semi - TIER_PRICES.unfurnished,
-  fully: TIER_PRICES.fully - TIER_PRICES.unfurnished,
+  semi: 5,
+  fully: 15,
 };
 
 export function tierPrice(base: Price, tier: TierKey): Price {
@@ -100,10 +103,14 @@ export function formatPrice(p: Price) {
     : `₹${p.min} – ₹${p.max} Lakhs`;
 }
 
+export function projectTierPrice(project: Project, tier: TierKey): Price {
+  return project.tierPrices?.[tier] ?? tierPrice(project.basePrice, tier);
+}
+
 /** Price for a tier, or null when the project is sold out. */
 export function tierPriceLabel(project: Project, tier: TierKey) {
   if (project.soldOut) return null;
-  return formatPrice(tierPrice(project.basePrice, tier));
+  return formatPrice(projectTierPrice(project, tier));
 }
 
 /* ------------------------------------------------------------------ */
@@ -377,7 +384,7 @@ export const projects: Project[] = [
     plotArea: "24 cents",
     builtUp: "1,100 – 1,650 sq ft",
     completion: "Register opening 2026",
-    basePrice: STARTING_PRICE,
+    basePrice: TAQVA_STARTING_PRICE,
     soldOut: false,
     summary:
       "Three buildings on a narrow lane off Taqva Road, planned around the light the site already has.",
@@ -392,7 +399,7 @@ export const projects: Project[] = [
     overview: [
       "Taqva Road is a quiet lane off the main Vaduthala stretch, close enough to the market to walk and far enough back that the noise does not follow you home. The plot is narrow and deep, which rules out one large block and suggests three smaller ones instead.",
       "That is what we are building: three buildings set apart with planted gaps between them, so every apartment takes light and air from two sides rather than one. The gaps do the work that a courtyard does in an older Kerala house. Living rooms face east for the morning; kitchens and utilities take the west wall, where the afternoon heat can be absorbed by something other than a room you sit in.",
-      `Drawings are with the planning authority and we expect to open the register in 2026. Prices start at ${formatPrice(STARTING_PRICE)} unfurnished. If you would like to be told when the first building is released, leave your number and we will call before anything is advertised.`,
+      `Drawings are with the planning authority and we expect to open the register in 2026. Prices start at ${formatPrice(TAQVA_STARTING_PRICE)} unfurnished. If you would like to be told when the first building is released, leave your number and we will call before anything is advertised.`,
     ],
     gallery: [
       {
@@ -443,7 +450,8 @@ export const projects: Project[] = [
     plotArea: "32 cents",
     builtUp: "1,750 – 2,300 sq ft",
     completion: "Phased through 2026",
-    basePrice: STARTING_PRICE,
+    basePrice: MIRZAD_TIER_PRICES.unfurnished,
+    tierPrices: MIRZAD_TIER_PRICES,
     soldOut: false,
     summary:
       "Eight villas along Mirzad Road, built in phases. Two are finished and lived in; six follow.",
@@ -452,7 +460,7 @@ export const projects: Project[] = [
     overview: [
       "Mirzad Road runs along a slight ridge, which is unusual enough in this part of Kochi to be worth designing around. The land falls away to the south, so we set the villas along the high edge and let their gardens step down behind them.",
       "Each villa turns its back on the road and opens south into its own garden. A veranda runs the full width of that south face, deep enough to keep the monsoon off an open door and to be usable as a room for the four months when sitting outside is the only sensible thing to do. Upstairs, the bedrooms take the same orientation, with louvred shutters on the west so the evening breeze comes through without the evening sun.",
-      `Two villas are complete and occupied. The remaining six are under construction and will be handed over in phases through 2026. Prices start at ${formatPrice(STARTING_PRICE)} unfurnished, and all three levels of finish are available on the six still to come.`,
+      `Two villas are complete and occupied. The remaining six are under construction and will be handed over in phases through 2026. Prices start at ${formatPrice(MIRZAD_TIER_PRICES.unfurnished)} unfurnished, and all three levels of finish are available on the six still to come.`,
     ],
     gallery: [
       { image: img("/images/projects/mirzad-road/01-ground-floor-living-unfurnished.webp", "Mirzad Road: Ground Floor Living Unfurnished"), caption: "Ground Floor Living Unfurnished", layout: "half" },
@@ -579,6 +587,7 @@ export const projects: Project[] = [
     floorPlans: { ground: apartmentGround, first: apartmentUpper },
     specs: defaultSpecs("apartment"),
     mapQuery: "Perumbavoor, Ernakulam, Kerala",
+    catalogUrl: "/catalogs/perumbavoor.pdf",
   },
   {
     slug: "vaduthala-salafi",
@@ -638,6 +647,7 @@ export const projects: Project[] = [
     floorPlans: { ground: villaGround, first: villaFirst },
     specs: defaultSpecs("villa"),
     mapQuery: "Vaduthala, Kochi, Kerala",
+    catalogUrl: "/catalogs/vaduthala-salafi.pdf",
   },
   {
     slug: "nettoor-residences",

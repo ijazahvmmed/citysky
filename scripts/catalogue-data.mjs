@@ -33,8 +33,10 @@ const data = readModule(path.join(root, 'src/lib/data/projects.ts'));
 const { site } = readModule(path.join(root, 'src/lib/site.ts'));
 process.stdout.write(JSON.stringify({
   site,
-  projects: data.projects.filter((p) => ['mirzad-road', '1008', 'taqva-road-vaduthala', 'nettoor-residences'].includes(p.slug)),
+  projects: data.projects.map((project) => ({
+    ...project,
+    tierPriceLabels: Object.fromEntries(data.tiers.map((tier) => [tier.key, data.tierPriceLabel(project, tier.key)])),
+  })),
   tiers: data.tiers,
   comparisonRows: data.comparisonRows,
-  prices: data.TIER_PRICES,
 }));

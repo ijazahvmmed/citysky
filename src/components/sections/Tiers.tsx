@@ -5,8 +5,7 @@ import {
   tiers,
   tierPriceLabel,
   formatPrice,
-  TIER_PRICES,
-  TIER_UPLIFT,
+  projectTierPrice,
   type Project,
   type TierKey,
 } from "@/lib/data/projects";
@@ -41,7 +40,7 @@ export function Tiers({
   const soldOut = project?.soldOut ?? false;
   // Sold-out pages keep this section as an explanation of how homes are
   // delivered, so no prices and no enquiry links for that project.
-  const showPrices = !soldOut;
+  const showPrices = Boolean(project) && !soldOut;
   const showEnquiry = Boolean(project) && !soldOut;
 
   return (
@@ -76,9 +75,24 @@ export function Tiers({
         <div className={styles.columns}>
           {tiers.map((t) => {
             const featured = t.key === "fully";
-            const price = project
-              ? tierPriceLabel(project, t.key)
-              : formatPrice({ min: TIER_PRICES[t.key] });
+            const price = project ? tierPriceLabel(project, t.key) : null;
+            const currentPrice = project ? projectTierPrice(project, t.key) : null;
+            const previousKey = t.key === "fully" ? "semi" : "unfurnished";
+            const previousPrice = project && t.key !== "unfurnished"
+              ? projectTierPrice(project, previousKey)
+              : null;
+            const upgradeMin = currentPrice && previousPrice
+              ? currentPrice.min - previousPrice.min
+              : null;
+            const upgradeMax = currentPrice && previousPrice
+              ? (currentPrice.max ?? currentPrice.min) - (previousPrice.max ?? previousPrice.min)
+              : null;
+            const upgrade = upgradeMin !== null && upgradeMax !== null
+              ? formatPrice({
+                  min: upgradeMin,
+                  ...(upgradeMax !== upgradeMin ? { max: upgradeMax } : {}),
+                })
+              : null;
             return (
               <article
                 key={t.key}
@@ -89,7 +103,7 @@ export function Tiers({
                   <span className={styles.numeral} aria-hidden="true">
                     {t.numeral}
                   </span>
-                  {featured && <span className={styles.most}>Complete package</span>}
+                  {featured && <span className={styles.valueBadge}>Most complete</span>}
                 </div>
                 <div className={styles.identity}>
                   <h3 className={styles.name}>{t.name}</h3>
@@ -100,13 +114,13 @@ export function Tiers({
                   <div className={styles.priceBlock}>
                     <p className={styles.price}>
                       <span className={styles.priceLabel}>
-                        {project?.basePrice.max === undefined ? "Starting from" : "Price range"}
+                        {currentPrice?.max === undefined ? "Starting from" : "Price range"}
                       </span>
                       <span className={styles.priceValue}>{price}</span>
                     </p>
-                    {t.key !== "unfurnished" && (
+                    {upgrade && (
                       <p className={styles.upgrade}>
-                        +₹{t.key === "semi" ? TIER_UPLIFT.semi : TIER_UPLIFT.fully - TIER_UPLIFT.semi} Lakhs
+                        +{upgrade}
                         {" "}over {t.key === "semi" ? "Unfurnished" : "Semi-Furnished"}
                       </p>
                     )}
@@ -118,10 +132,24 @@ export function Tiers({
                   </p>
                 )}
 
-                <p className={`small muted ${styles.copy}`}>{t.copy}</p>
+                {featured ? (
+                  <div className={styles.valueNote}>
+                    <p>Ready to live in, down to the details.</p>
+                    <span>
+                      Furniture, décor and finishing touches coordinated and
+                      installed before handover.
+                    </span>
+                  </div>
+                ) : (
+                  <p className={`small muted ${styles.copy}`}>{t.copy}</p>
+                )}
 
                 <p className={styles.includesLabel}>
-                  {t.key === "unfurnished" ? "Included in every home" : "What this adds"}
+                  {t.key === "unfurnished"
+                    ? "Included in every home"
+                    : featured
+                      ? "The complete finish includes"
+                      : "What this adds"}
                 </p>
                 <ul className={styles.includes}>
                   {t.includes.map((item) => (

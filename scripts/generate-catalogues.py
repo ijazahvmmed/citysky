@@ -148,7 +148,7 @@ class Catalogue:
         self.text('COMPLETED / SOLD OUT' if p['soldOut'] else p['status'].upper(), M, 606, 9, RED if p['soldOut'] else INK, True)
         self.para(p['summary'], M, 636, width=390, size=15, leading=21)
         if not p['soldOut']:
-            self.text(f"Homes starting from INR {DATA['prices']['unfurnished']} lakhs", M, 737, 12, bold=True)
+            self.text(f"Homes starting from {p['tierPriceLabels']['unfurnished']}", M, 737, 12, bold=True)
         else:
             self.text('A record of the project. No homes currently offered for sale.', M, 737, 10, MUTED)
 
@@ -184,9 +184,10 @@ class Catalogue:
         self.title('Inside the project' if label=='Project imagery' else 'Visual direction', title)
         for i,item in enumerate(items):
             y=181+i*292
-            self.photo(item['image'], M, y, W-2*M, 240)
+            photo_height = 480 if len(items)==1 else 240
+            self.photo(item['image'], M, y, W-2*M, photo_height)
             cap=item.get('caption') or item['image']['alt']
-            self.para(cap, M, y+250, size=9, color=MUTED, leading=12)
+            self.para(cap, M, y+photo_height+10, size=9, color=MUTED, leading=12)
         if any(not item['image']['id'].startswith('/') for item in items):
             self.para('Reference imagery only - not project photography. Source: Unsplash imagery used on the Citysky website.', M, 764, size=8, color=MUTED, leading=11)
 
@@ -195,10 +196,14 @@ class Catalogue:
         self.title('Choose your finish', 'One home. Three ways to settle in.')
         y=180
         for tier in DATA['tiers']:
-            self.box(M,y,W-2*M,173, PALE if tier['key']!='semi' else colors.HexColor('#e7ede7'))
+            complete = tier['key']=='fully'
+            self.box(M,y,W-2*M,173, colors.HexColor('#e0e9e1') if complete else PALE)
+            if complete:
+                self.box(M,y,3,173,INK)
+                self.text('MOST COMPLETE',W-M-109,y+19,8,INK,True)
             self.text(tier['numeral'],M+16,y+16,12,MUTED)
             self.text(tier['name'],M+51,y+14,17,bold=True)
-            self.text(f"From INR {DATA['prices'][tier['key']]} lakhs",M+51,y+43,13,bold=True)
+            self.text(f"From {self.p['tierPriceLabels'][tier['key']]}",M+51,y+43,13,bold=True)
             self.para(tier['tagline'],M+16,y+76,width=W-2*M-32,size=10)
             self.para(' / '.join(tier['includes']),M+16,y+109,width=W-2*M-32,size=9,color=MUTED,leading=13)
             y+=186

@@ -16,10 +16,10 @@ Read the installed Next.js guides in `node_modules/next/dist/docs/` before chang
 ## Shared content
 
 - `src/lib/site.ts`: contact details, navigation, supplied Maps link and canonical site URL.
-- `src/lib/data/projects.ts`: projects, galleries and furnishing options. `TIER_PRICES` defines the 72/76/80 lakh starting prices; available projects and hero pricing use the same source.
+- `src/lib/data/projects.ts`: projects, galleries and furnishing options. `STARTING_PRICE` is the homepage's ₹65 lakh campaign price. Mirzad Road has its own ₹72/76/80 lakh finish quotation; other projects retain their existing prices. `projectTierPrice` resolves each project's finish prices for the website and catalogues. The homepage finish overview intentionally has no tier prices.
 - `src/components/build/`: scroll-driven construction stages, finish selection and 3D camera interaction. The viewer supports drag, keyboard rotation, zoom/reset buttons, reduced motion and a static fallback.
 
-Set `NEXT_PUBLIC_SITE_URL` before building when connecting a custom domain. The default is `https://cityskyy.vercel.app`, matching the supplied Vercel project screenshot. Metadata, sitemap and public links share this value. See `.env.example`.
+The canonical public address is `https://cityskyhomes.com`. Metadata, sitemap, public links and catalogues share this value. `NEXT_PUBLIC_SITE_URL` can override it before a build; see `.env.example`.
 
 ## Project catalogues
 

@@ -1,22 +1,32 @@
 {
   "taqva-road-vaduthala": {
     "pages": 7,
-    "bytes": 1785142,
+    "bytes": 1785139,
     "content": "Project imagery, overview, finish comparison and starting prices"
   },
   "mirzad-road": {
     "pages": 12,
-    "bytes": 1555280,
+    "bytes": 1555240,
     "content": "Project imagery, overview, finish comparison and starting prices"
   },
   "1008": {
     "pages": 6,
-    "bytes": 2183153,
+    "bytes": 2183095,
+    "content": "Project imagery, overview and contact details"
+  },
+  "perumbavoor": {
+    "pages": 5,
+    "bytes": 1764768,
+    "content": "Project imagery, overview and contact details"
+  },
+  "vaduthala-salafi": {
+    "pages": 5,
+    "bytes": 1440331,
     "content": "Project imagery, overview and contact details"
   },
   "nettoor-residences": {
     "pages": 5,
-    "bytes": 1603567,
+    "bytes": 1603522,
     "content": "Project imagery, overview and contact details"
   }
 }

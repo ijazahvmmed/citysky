@@ -1,5 +1,5 @@
 // Set this public value when a custom domain is connected to the deployment.
-const siteUrl = new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://cityskyy.vercel.app").origin;
+const siteUrl = new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://cityskyhomes.com").origin;
 
 export const site = {
   name: "Citysky Builders",
