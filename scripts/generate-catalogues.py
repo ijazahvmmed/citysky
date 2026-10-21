@@ -186,7 +186,7 @@ class Catalogue:
             y=181+i*292
             photo_height = 480 if len(items)==1 else 240
             self.photo(item['image'], M, y, W-2*M, photo_height)
-            cap=item.get('caption') or item['image']['alt']
+            cap=(item.get('caption') or item['image']['alt']) if item['image']['id'].startswith('/') else 'Architectural reference - finishes, light and spatial character.'
             self.para(cap, M, y+photo_height+10, size=9, color=MUTED, leading=12)
         if any(not item['image']['id'].startswith('/') for item in items):
             self.para('Reference imagery only - not project photography. Source: Unsplash imagery used on the Citysky website.', M, 764, size=8, color=MUTED, leading=11)

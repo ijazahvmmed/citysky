@@ -7,12 +7,15 @@ import { BuildingViewport, type BuildingHandle } from "./BuildingViewport";
 import { constructionStages } from "./scene-contract";
 import styles from "./Build.module.css";
 
+const DESKTOP_CONSTRUCTION_END = 0.8;
+
 export function BuildExperience({ expanded = false }: { expanded?: boolean }) {
   const root = useRef<HTMLElement>(null);
   const panel = useRef<HTMLDivElement>(null);
   const viewport = useRef<BuildingHandle>(null);
   const meter = useRef<HTMLSpanElement>(null);
   const trigger = useRef<ScrollTrigger | null>(null);
+  const constructionEnd = useRef(1);
   const stageIndex = useRef(0);
   const [stage, setStage] = useState(0);
   const id = useId();
@@ -22,9 +25,10 @@ export function BuildExperience({ expanded = false }: { expanded?: boolean }) {
     const pinned = panel.current;
     if (!element || !pinned) return;
     function update(value: number) {
-      viewport.current?.setProgress(value);
-      if (meter.current) meter.current.style.transform = `scaleX(${value})`;
-      const next = Math.min(5, Math.floor(value * 6));
+      const progress = Math.min(1, Math.max(0, value));
+      viewport.current?.setProgress(progress);
+      if (meter.current) meter.current.style.transform = `scaleX(${progress})`;
+      const next = Math.min(5, Math.floor(progress * 6));
       if (stageIndex.current !== next) {
         stageIndex.current = next;
         setStage(next);
@@ -38,14 +42,19 @@ export function BuildExperience({ expanded = false }: { expanded?: boolean }) {
       }
       const desktop = context.conditions.desktop;
       const roomy = context.conditions.roomy;
+      const shouldPin = desktop || roomy;
+      const buildEnd = desktop ? DESKTOP_CONSTRUCTION_END : 1;
+      constructionEnd.current = buildEnd;
       const playhead = { value: 0 };
       const tween = gsap.to(playhead, {
-        value: 1, ease: "none",
+        // Preserve construction speed, then hold the finished home on desktop
+        // before releasing the pinned panel into the next section.
+        value: 1 / buildEnd, ease: "none",
         onUpdate: () => update(playhead.value),
         scrollTrigger: {
-          trigger: element, start: roomy ? "top top" : "top 65%",
-          end: roomy ? () => `+=${desktop ? (expanded ? 3600 : 2800) : 1700}` : "bottom 35%",
-          pin: roomy ? pinned : false, pinType: "fixed", scrub: desktop ? 0.5 : 0.25,
+          trigger: element, start: shouldPin ? "top top" : "top 65%",
+          end: shouldPin ? () => `+=${desktop ? (expanded ? 3600 : 2800) / buildEnd : 1700}` : "bottom 35%",
+          pin: shouldPin ? pinned : false, pinType: "fixed", scrub: desktop ? 0.5 : 0.25,
           anticipatePin: 1, invalidateOnRefresh: true,
         },
       });
@@ -58,9 +67,16 @@ export function BuildExperience({ expanded = false }: { expanded?: boolean }) {
   function select(index: number) {
     // Select the completed state of each stage; Live must reach the lighting pass.
     const value = index === 5 ? 0.98 : (index + 0.9) / 6;
-    if (trigger.current) {
-      window.scrollTo({ top: trigger.current.start + (trigger.current.end - trigger.current.start) * value, behavior: "instant" });
+    if (trigger.current?.vars.pin) {
+      const buildEnd = constructionEnd.current;
+      const scrollProgress = index === 5 && buildEnd < 1
+        ? buildEnd + (1 - buildEnd) * 0.25
+        : value * buildEnd;
+      window.scrollTo({ top: trigger.current.start + (trigger.current.end - trigger.current.start) * scrollProgress, behavior: "instant" });
     } else {
+      // In a short, unpinned viewport, jumping to the end of the scroll range
+      // would move the home offscreen. Keep explicit stage choices in place.
+      trigger.current?.disable(false);
       viewport.current?.setProgress(value);
       if (meter.current) meter.current.style.transform = `scaleX(${value})`;
       stageIndex.current = index;

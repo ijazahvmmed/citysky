@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
 import { assemblyTransform, phase, type AssemblyPart } from "./assembly";
 import { createLandscape } from "./landscape";
+import { createArrivalCourt } from "./arrival-court";
 import { createSceneSurfaces } from "./scene-surfaces";
 import type { Completion } from "./scene-contract";
 
@@ -45,6 +46,7 @@ export function createArchitecturalModel(scene: THREE.Scene, mobile: boolean, an
     parts.push({ group, material, position: [x, y, z], size: [w, h, d], start, end, axis, settle });
   }
   const landscape = createLandscape(root, surfaces, mobile);
+  const arrivalCourt = createArrivalCourt(root, surfaces, mobile);
 
   // Footings, ground frame and upper frame are timed independently, in load order.
   let i = 0;
@@ -222,11 +224,16 @@ export function createArchitecturalModel(scene: THREE.Scene, mobile: boolean, an
 
   const interiorLights: THREE.PointLight[] = [];
   for (const y of [2.6, 5.6]) {
-    const light = new THREE.PointLight(0xffbc7d, 0, 6.5, 2);
+    const light = new THREE.PointLight(0xffb05d, 0, 6.5, 2);
     light.position.set(-1.5, y, 1.2); root.add(light); interiorLights.push(light);
-    const rear = new THREE.PointLight(0xffd59b,0,6,2);
+    const rear = new THREE.PointLight(0xffbf78,0,6,2);
     rear.position.set(2.2,y,-.8); root.add(rear); interiorLights.push(rear);
   }
+  // One shared, unshadowed source lets the porch soffit and car catch the
+  // downlights without adding a costly shadow pass for each fixture.
+  const porchLight = new THREE.PointLight(0xffb86f, 0, 6, 2);
+  porchLight.position.set(4.65, 2.5, 5);
+  root.add(porchLight);
   const raw = new THREE.Color("#aaa99f");
   const finishedPlaster = new THREE.Color("#e1ded1");
   const finishedTimber = new THREE.Color("#725035");
@@ -260,8 +267,10 @@ export function createArchitecturalModel(scene: THREE.Scene, mobile: boolean, an
     }
     drawingMaterial.opacity = 0.38 * (1 - phase(p, 0.32, 0.59));
     const warmth = completion ? phase(finish, 0.55, 1) : phase(p, 0.86, 0.965);
-    luminous.emissiveIntensity = warmth * 1.4;
-    interiorLights.forEach(light => { light.intensity = warmth * 26; });
+    luminous.emissiveIntensity = warmth * 3.2;
+    interiorLights.forEach(light => { light.intensity = warmth * 40; });
+    porchLight.intensity = warmth * phase(p, .87, .96) * 22;
+    arrivalCourt.update(p, warmth);
     return warmth;
   }
   return {
@@ -270,7 +279,7 @@ export function createArchitecturalModel(scene: THREE.Scene, mobile: boolean, an
     dispose() {
       resources.forEach(resource => resource.dispose());
       materials.forEach(material => material.dispose());
-      landscape.dispose(); surfaces.dispose();
+      arrivalCourt.dispose(); landscape.dispose(); surfaces.dispose();
       root.traverse(object => { if (object instanceof THREE.InstancedMesh) object.dispose(); });
       scene.remove(root);
     },

@@ -166,6 +166,8 @@ export function createLandscape(root: THREE.Group, surfaces: Surfaces, mobile: b
     }
     for (let i = 0; i < 12; i++) {
         const z = -5.3 + i * .85;
+        // Keep the covered arrival court and its turning approach free of planting.
+        if (z > 1.9) continue;
         shrub(6.1 + Math.sin(i) * .3, z, .9 + random() * .3, .81 + i * .005);
         tuft(5.35, z, .65, .86);
     }
@@ -182,13 +184,13 @@ export function createLandscape(root: THREE.Group, surfaces: Surfaces, mobile: b
     for (let row = 0; row < 5; row++)
         for (let col = 0; col < 3; col++)
             item(paving, [.3 + col * .81, -.14, 4.5 + row * .68], [.78, .12, .65], .75 + row * .009);
-    for (let i = 0; i < 9; i++)
+    for (let i = 2; i < 9; i++)
         item(paving, [4.85, -.14, 3.4 - i * .92], [.82, .12, .62], .77 + i * .005);
     for (let i = 0; i < 9; i++)
         item(paving, [-4 + i * 1.05, -.14, -4.1], [.78, .12, .8], .79 + i * .004);
-    // Small planting islands soften the arrival, kept out of the main sightline.
+    // Low planting sits outside the car porch, not inside the new driveway.
     for (let i = 0; i < 9; i++)
-        tuft(3.4 + random() * 1.5, 5 + random() * 1.8, .45 + random() * .5, .88);
+        tuft(6.95 + random() * .45, 3.7 + random() * 3.4, .4 + random() * .3, .88);
     contact(0, 0, 10, 8);
     const sets = [
         { geometry: leaf, material: foliage, data: leaves }, { geometry: branchGeo, material: bark, data: branches },

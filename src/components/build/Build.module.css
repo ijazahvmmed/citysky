@@ -10,10 +10,11 @@
 .sceneCaption { display: flex; justify-content: space-between; gap: 1rem; position: absolute; inset: 0 0 auto; font-size: 0.625rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-secondary); }
 .viewport { position: relative; width: 100%; height: 100%; min-height: 240px; }
 .canvas, .fallback { position: absolute; inset: 0; width: 100%; height: 100%; }
-.canvas { touch-action: pan-y pinch-zoom; cursor: grab; user-select: none; -webkit-user-select: none; background: radial-gradient(ellipse at 50% 65%, #dfe4dc 0%, #eef0eb 45%, transparent 75%); mask-image: linear-gradient(to bottom, transparent, #000 8%, #000 84%, transparent), linear-gradient(to right, transparent, #000 5%, #000 95%, transparent); mask-composite: intersect; }
+.canvas { touch-action: pan-y pinch-zoom; cursor: grab; user-select: none; -webkit-user-select: none; background: radial-gradient(ellipse at 50% 65%, #dfe4dc 0%, #eef0eb 45%, transparent 75%); mask-image: linear-gradient(to bottom, transparent, #000 4%, #000 97%, transparent), linear-gradient(to right, transparent, #000 2%, #000 98%, transparent); mask-composite: intersect; }
+.canvas::before { content: ""; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse at 51% 58%, #677b88 0%, #91a1a7 34%, #c5cece 58%, transparent 79%); opacity: var(--scene-dusk, 0); }
 .canvas:active { cursor: grabbing; }
 .canvas:focus-visible { outline-offset: -4px; }
-.canvas canvas { width: 100%; height: 100%; display: block; }
+.canvas canvas { position: relative; width: 100%; height: 100%; display: block; }
 .viewControls { position: absolute; z-index: 2; top: 0.5rem; right: 0.75rem; display: flex; border: 1px solid var(--border-strong); border-radius: 100px; background: rgb(250 250 248 / 85%); backdrop-filter: blur(12px); }
 .viewControls button { width: 44px; height: 44px; border-radius: 100px; font-size: 1.15rem; line-height: 1; transition: background-color 180ms ease; }
 .viewControls button:hover { background: var(--accent-tint); }
@@ -94,6 +95,7 @@
   .skip { margin-top: 0.35rem; font-size: 0.625rem; padding-block: 0.5rem; }
   .sceneCaption { display: none; }
   .viewHint { bottom: 0.5rem; font-size: 0.5625rem; }
+  .canvas[data-atmosphere="dusk"] ~ .viewHint { bottom: 1.25rem; color: #f5efdf; text-shadow: 0 1px 5px rgb(0 0 0 / 70%); }
   .stageRow { display: none; }
   .mobileStage { display: flex; gap: 1rem; align-items: center; justify-content: space-between; font-size: 0.6875rem; color: var(--text-secondary); padding-bottom: 0.15rem; }
   .mobileStage p { display: flex; gap: 1rem; align-items: baseline; }
@@ -105,7 +107,9 @@
   .sequenceBottom p { max-width: 27ch; font-size: 0.75rem; }
   .sequenceBottom a { font-size: 0.75rem; }
   .completionGrid { gap: 3%; grid-template-columns: 1fr 1.1fr; }
-  .completionVisual { height: 450px; }
+  .completionVisual { height: 450px; display: flex; flex-direction: column; gap: 1rem; }
+  .completionVisual > .viewport { flex: 1; height: auto; }
+  .finishCaption { position: static; flex-shrink: 0; }
 }
 
 @media (max-width: 600px) {
@@ -115,11 +119,15 @@
   .experienceCopy :global(.eyebrow) { margin-bottom: 0.75rem; }
   .viewport { min-height: 210px; }
   .sceneArea { margin-inline: calc(-1 * var(--gutter)); }
+  .sceneArea .viewControls { top: -2.25rem; }
   .sequenceBottom { display: block; }
   .sequenceBottom p, .sequenceBottom p.finalLine { display: block; font-size: 0.6875rem; line-height: 1.4; min-height: 2.8em; max-width: 40ch; margin-bottom: 0.25rem; }
   .sequenceBottom a { font-size: 0.8125rem; min-height: 36px; }
   .completionGrid, .enquiryGrid { grid-template-columns: 1fr; gap: 2.25rem; }
-  .completionVisual { height: auto; aspect-ratio: 1; grid-row: 2; }
+  .completionVisual { height: auto; grid-row: 2; display: flex; flex-direction: column; gap: 0.75rem; padding-top: 3.25rem; }
+  .completionVisual > .viewport { height: auto; aspect-ratio: 1; flex: none; }
+  .completionVisual .viewControls { top: -3rem; right: 0; }
+  .finishCaption { position: static; }
   .options button { font-size: 1.15rem; padding-block: 0.9rem; }
   .optionCopy { min-height: 8rem; }
   .optionCopy h3 { font-size: 0.9375rem; }
@@ -128,10 +136,14 @@
 }
 
 @media (max-height: 650px) and (min-width: 1024px) {
-  .experiencePanel { min-height: 500px; }
-  .experienceInner { padding-top: 4.5rem; padding-bottom: 5rem; }
-  .experienceCopy h2 { font-size: 2.25rem; }
-  .support { margin-top: 1rem; }
+  .experiencePanel { min-height: 0; }
+  .experienceInner { padding-top: 3rem; padding-bottom: 5rem; row-gap: 0.5rem; }
+  .experienceCopy { padding-bottom: 0; }
+  .experienceCopy :global(.eyebrow) { margin-bottom: 0.75rem; }
+  .experienceCopy h2 { font-size: 2rem; }
+  .support { margin-top: 0.75rem; font-size: 0.8125rem; line-height: 1.5; }
+  .skip { margin-top: 0.75rem; padding-block: 0.5rem; }
+  .stageRow button { min-height: 36px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -146,7 +158,7 @@
   .experienceInner { padding-bottom: 3rem; }
 }
 
-@media (max-height: 650px) {
+@media (max-height: 650px) and (max-width: 1023px) {
   .experiencePanel { height: auto; min-height: 0; }
   .experienceInner { padding-block: var(--space-section); }
   .sceneArea { min-height: 300px; }

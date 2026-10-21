@@ -40,6 +40,10 @@ export function createBuildingScene(host: HTMLElement, onFailure: () => void): B
     const fill = new THREE.DirectionalLight(0xe3eaf1, .35);
     fill.position.set(8, 6, -6);
     scene.add(fill);
+    const duskSun = new THREE.Color(0xc5d4e8);
+    const duskSky = new THREE.Color(0x9fb5d3);
+    const duskGround = new THREE.Color(0x46534e);
+    const duskFill = new THREE.Color(0xabc7eb);
     const model = createArchitecturalModel(scene, mobile, Math.min(8, renderer.capabilities.getMaxAnisotropy()));
     let occlusion = mobile ? null : createArchitecturalOcclusion(renderer, scene, camera);
     let progress = 0, completion: Completion | null = null, finish = 0, finishTarget = 0;
@@ -56,10 +60,14 @@ export function createBuildingScene(host: HTMLElement, onFailure: () => void): B
         direction: "pending" | "horizontal" | "vertical";
     } | null = null;
     const degrees = THREE.MathUtils.degToRad;
-    const framingPoints = [
-        ...[-6.4, 6.4].flatMap(x => [-5.5, 6.6].map(z => new THREE.Vector3(x, -.2, z))),
-        ...[-4.4, 4.4].flatMap(x => [-3.2, 3.75].map(z => new THREE.Vector3(x, 6.8, z))),
-    ];
+    // Frame the architecture, not the whole garden. Separate bounds for the
+    // lower porch keep the two-storey house prominent at every orbit angle.
+    const framingPoints = [-4.4, 4.4].flatMap(x =>
+        [-3.2, 3.75].flatMap(z => [-.2, 6.8].map(y => new THREE.Vector3(x, y, z))));
+    const courtPoints = [2.9, 6.4].flatMap(x =>
+        [2.9, 8.35].flatMap(z => [-.2, 3.1].map(y => new THREE.Vector3(x, y, z))));
+    const allFramingPoints = [...framingPoints, ...courtPoints];
+    const courtAnchor = new THREE.Vector3(4, 1.45, 2.9);
     const direction = new THREE.Vector3(), right = new THREE.Vector3(), viewUp = new THREE.Vector3(), point = new THREE.Vector3(), target = new THREE.Vector3();
     function compose() {
         const p = completion ? 1 : progress, movement = phase(p, .08, .96);
@@ -67,17 +75,25 @@ export function createBuildingScene(host: HTMLElement, onFailure: () => void): B
         const azimuth = degrees(mobile ? 25 + movement * 8 : 26 + movement * 9) + yaw + drift;
         const elevation = THREE.MathUtils.clamp(degrees(34 - movement * 17) + pitch, degrees(10), degrees(48));
         camera.fov = mobile ? 43 : 39;
-        target.set(0, mobile ? 2.15 : 2.25, .3);
+        const arrival = phase(p, .7, .94);
+        target.set(.65 * arrival, THREE.MathUtils.lerp(2.25, 1.45, arrival), .3 + .75 * arrival);
         const tangent = Math.tan(degrees(camera.fov / 2));
         direction.set(Math.sin(azimuth) * Math.cos(elevation), Math.sin(elevation), Math.cos(azimuth) * Math.cos(elevation));
         right.set(Math.cos(azimuth), 0, -Math.sin(azimuth));
         viewUp.crossVectors(direction, right);
-        let distance = 0;
-        for (const vertex of framingPoints) {
-            point.copy(vertex).sub(target);
-            distance = Math.max(distance, point.dot(direction) + Math.max(Math.abs(point.dot(right)) / (tangent * camera.aspect * (mobile ? 1.18 : .97)), Math.abs(point.dot(viewUp)) / (tangent * .93)));
+        let distance = 0, closestDistance = 0;
+        for (const [index, vertex] of allFramingPoints.entries()) {
+            point.copy(vertex);
+            if (index >= framingPoints.length) point.lerp(courtAnchor, 1 - arrival);
+            point.sub(target);
+            const depth = point.dot(direction);
+            const horizontal = Math.abs(point.dot(right)) / (tangent * camera.aspect);
+            const vertical = Math.abs(point.dot(viewUp)) / tangent;
+            distance = Math.max(distance, depth + Math.max(horizontal / .92, vertical / .86));
+            closestDistance = Math.max(closestDistance, depth + Math.max(horizontal / .97, vertical / .91));
         }
-        distance *= (1.07 - movement * .07) * zoom;
+        // Even at maximum zoom, keep the roof and driveway inside the frame.
+        distance = Math.max(closestDistance, distance * (1.07 - movement * .07) * zoom);
         camera.position.copy(target).addScaledVector(direction, distance);
         camera.lookAt(target);
         camera.updateProjectionMatrix();
@@ -107,9 +123,19 @@ export function createBuildingScene(host: HTMLElement, onFailure: () => void): B
             finish = finishTarget;
         if (dirty || Math.abs(before - finish) > .00001) {
             const warmth = model.update(progress, completion, finish);
-            sun.color.set(0xfff3dc).lerp(new THREE.Color(0xffe2bb), warmth * .35);
-            sun.intensity = 3 - warmth * .8;
-            ambient.intensity = .48 - warmth * .08;
+            // The last construction beat settles into blue hour. Keep the
+            // exterior legible while the rooms become the brightest surfaces.
+            sun.color.set(0xfff3dc).lerp(duskSun, warmth);
+            sun.intensity = THREE.MathUtils.lerp(3, .64, warmth);
+            ambient.color.set(0xe0e7ed).lerp(duskSky, warmth);
+            ambient.groundColor.set(0x797460).lerp(duskGround, warmth);
+            ambient.intensity = THREE.MathUtils.lerp(.48, .24, warmth);
+            fill.color.set(0xe3eaf1).lerp(duskFill, warmth);
+            fill.intensity = THREE.MathUtils.lerp(.35, .48, warmth);
+            scene.environmentIntensity = THREE.MathUtils.lerp(.55, .19, warmth);
+            renderer.toneMappingExposure = THREE.MathUtils.lerp(1, .98, warmth);
+            host.style.setProperty("--scene-dusk", warmth.toFixed(3));
+            host.dataset.atmosphere = warmth > .5 ? "dusk" : "day";
             renderer.shadowMap.needsUpdate = true;
             dirty = false;
         }
@@ -308,6 +334,8 @@ export function createBuildingScene(host: HTMLElement, onFailure: () => void): B
             renderer.forceContextLoss();
             canvas.remove();
             delete host.dataset.inspected;
+            delete host.dataset.atmosphere;
+            host.style.removeProperty("--scene-dusk");
         },
     };
 }
